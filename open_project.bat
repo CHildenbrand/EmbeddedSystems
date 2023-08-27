@@ -1,16 +1,16 @@
 @echo off
 pushd
-cd %~dp0..
 
 set "PROJECT_NAME=GPIO"
 
 REM Set Toolchain Paths
 @echo Set root paths...
-set "ECLIPSE_ROOT_PATH=C:\Tools\eclipse"
-set "COMPILER_ROOT_PATH=C:\Tools\ArmGnuToolchain\bin"
-set "ASTYLE_ROOT_PATH=C:\Tools\Astyle"
-set "MAKE_ROOT_PATH=C:\Tools\MinGW\bin"
-set "OPENOCD_PATH=C:\Tools\openocd\bin"
+set "TOOLS_PATH=C:\Tools"
+set "ECLIPSE_ROOT_PATH=%TOOLS_PATH%\eclipse"
+set "COMPILER_ROOT_PATH=%TOOLS_PATH%\ArmGnuToolchain\bin"
+set "ASTYLE_ROOT_PATH=%TOOLS_PATH%\Astyle"
+set "MAKE_ROOT_PATH=%TOOLS_PATH%\MinGW\bin"
+set "OPENOCD_PATH=%TOOLS_PATH%\openocd\bin"
 
 @echo Set execution paths...
 set "ECLIPSE=%ECLIPSE_ROOT_PATH%\eclipse.exe"
