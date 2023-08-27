@@ -63,6 +63,7 @@ void MainState_Init(void)
 
 void MainState_Cyclic(void)
 {
+	m_MainState_CycleCount++;
 #if defined(LD2_BUTTON_POLLING)
 	/* Read Pin State of User Button (Blue) */
 	GPIO_PinState userButtonState =
