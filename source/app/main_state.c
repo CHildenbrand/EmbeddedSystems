@@ -20,8 +20,8 @@
 *******************************************************************************/
 //#define LD2_SW_TOOGLE
 //#define LD2_BUTTON_POLLING
-//#define LD2_BUTTON_INT_TOGGLE
-#define LD2_BUTTON_INT_DOUBLE
+#define LD2_BUTTON_INT_TOGGLE
+//#define LD2_BUTTON_INT_DOUBLE
 
 #define LD2_SW_TOGGLE_CYCLE ((uint32_t)3500000UL)
 

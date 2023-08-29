@@ -41,17 +41,8 @@ int main(void)
 
   MainState_Init();
 
-
   while (1)
   {
-	  /* Stack demonstration. Try register, static, volatile; OPTIMIZATION = -O0 .. -O3 */
-	  uint32_t inc = 0u;
-	  uint32_t counter = 0u;
-	  uint32_t counterOut = 0u;
-	  inc+=1u;
-	  counter+=2u;
-	  counterOut+=3u;
-
 	  MainState_Cyclic();
   }
 }
@@ -116,6 +107,25 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
+
+/* USER CODE BEGIN EXTI15_10_IRQHandler */
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI15_10_IRQHandler(void)
+{
+  /* Hacker style - one purpose */
+  //HAL_GPIO_EXTI_IRQHandler(B1_USER_BUTTON_INT_Pin);
+
+  /* More generic style */
+  uint16_t gpioPin = (uint16_t)__HAL_GPIO_EXTI_GET_FLAG(GPIO_PIN_All);
+
+  if (gpioPin)
+  {
+		HAL_GPIO_EXTI_IRQHandler(gpioPin);
+  }
+}
+/* USER CODE END EXTI15_10_IRQHandler 1 */
 
 #ifdef  USE_FULL_ASSERT
 /**
