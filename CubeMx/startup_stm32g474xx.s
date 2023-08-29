@@ -30,8 +30,9 @@
 	.fpu softvfp
 	.thumb
 
-.global	g_pfnVectors
-.global	Default_Handler
+.global g_pfnInitRecord
+.global g_pfnVectors
+.global Default_Handler
 
 /* start address for the initialization values of the .data section.
 defined in linker script */
@@ -125,10 +126,14 @@ Infinite_Loop:
 * 0x0000.0000.
 *
 ******************************************************************************/
- 	.section	.isr_vector,"a",%progbits
+ 	.section    .reset_vector,"a",%progbits
+g_pfnInitRecord:
+	.word	_estack
+	.word	Reset_Handler
+
+ 	.section	.vector_table,"a",%progbits
 	.type	g_pfnVectors, %object
 	.size	g_pfnVectors, .-g_pfnVectors
-
 
 g_pfnVectors:
 	.word	_estack

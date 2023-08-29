@@ -41,7 +41,7 @@ INCLUDE_DIR = ../../CubeMx/Core/Inc \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Inc \
 		../../source/app
 
-LDSCRIPT = ../../CubeMx/STM32G474RETx_FLASH.ld
+LDSCRIPT = ../../source/lib/STM32G474RETx_FLASH.ld
 
 VPATH += $(sort $(dir $(C_SOURCES)))
 VPATH += $(sort $(dir $(ASM_SOURCES)))
