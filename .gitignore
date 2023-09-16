@@ -1,7 +1,7 @@
 # Ignore Files with Suffix
 
 # Ignore Folders
-/CubeMx/Makefile/
 /eclipse/.metadata/
 /eclipse/*/target/
-/CubeMx/Makefile
+
+/CubeMx/.mxproject

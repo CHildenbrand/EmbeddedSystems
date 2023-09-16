@@ -40,7 +40,7 @@ C_SOURCES =  ../../source/app/ctor_all.c \
 		../../CubeMx/Core/Src/crc.c
 
 
-ASM_SOURCES = ../../CubeMx/startup_stm32g474xx.s
+ASM_SOURCES = ../../source/lib/startup_stm32g474xx.s
 
 INCLUDE_DIR = ../../CubeMx/Core/Inc \
 		../../CubeMx/Drivers/CMSIS/Device/ST/STM32G4xx/Include \
