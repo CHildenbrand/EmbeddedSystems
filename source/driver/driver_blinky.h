@@ -1,21 +1,22 @@
 /**
- * @file      main_state.h
- * @author    Christian Hildenbrand
- * @date      01.05.2023
+ * @file      driver_blinky.h
+ * @author    Hildenbrand, Christian
+ * @date      06.05.2023
  *
- * @brief Header File for Main State Module
+ * @brief [description]
  */
 
-#ifndef MAIN_STATE_H_
-#define MAIN_STATE_H_
+#ifndef DRIVER_BLINKY_H_
+#define DRIVER_BLINKY_H_
 
 /*******************************************************************************
 * Includes
 *******************************************************************************/
-#include <stdbool.h>
 
-#include "driver_blinky.h"
-#include "driver_crc.h"
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "stm32g4xx_hal.h"
 
 /*******************************************************************************
 * Exported Defines
@@ -27,42 +28,52 @@
 
 typedef enum
 {
-	MainState_Initial,
+	DrvBlinkyState_On,
 
-	MainState_Idle,
+	DrvBlinkyState_Off,
 
-	MainState_SelfTest,
+	DrvBlinkyState_Blinky
+} DrvBlinkyState;
 
-	MainState_Running,
-
-	MainState_Error,
-} MainState_State;
 
 typedef struct
 {
-	DrvBlinky *const pDrvBlinky;
+	GPIO_TypeDef *ledPort;
 
-	DrvCrc *const pDrvCrc;
-} MainStateConfig;
+    uint16_t ledPin;
 
-typedef struct
-{
-	MainState_State state;
+    GPIO_PinState initValue;
 
-	uint32_t cycleCounter;
-} MainState_Data;
+    GPIO_PinState currentValue;
+} DrvGpio;
 
 typedef struct
 {
-	bool constructed;
+	uint32_t numberOfLeds;
 
-	MainStateConfig const* pCfg;
+	uint32_t blinkyCycleTotal;
 
+	DrvGpio *pDrvGpio;
+} DrvBlinkyCfg;
+
+typedef struct
+{
+	DrvBlinkyState state;
+
+	uint32_t blinkyCycleCnt;
+} DrvBlinkyData;
+
+
+typedef struct
+{
 	bool initialized;
 
-	MainState_Data data;
+	bool constructed;
 
-} MainState;
+	DrvBlinkyCfg const* pCfg;
+
+	DrvBlinkyData data;
+} DrvBlinky;
 
 /*******************************************************************************
 * Global Variables
@@ -72,10 +83,12 @@ typedef struct
 * Exported Functions
 *******************************************************************************/
 
-void MainState_Construct (MainState *const pThis, MainStateConfig const* const pCfg);
+void DrvBlinky_Construct(DrvBlinky *const pThis, DrvBlinkyCfg const* const pCfg);
 
-void MainState_Init(MainState *const pThis);
+void DrvBlinky_Init(DrvBlinky *const pThis);
 
-void MainState_Cyclic(MainState *const pThis);
+void DrvBlinky_Cyclic(DrvBlinky *const pThis);
 
-#endif /* MAIN_STATE_H_ */
+void DrvBlinky_SetState(DrvBlinky *const pThis, DrvBlinkyState state);
+
+#endif /* DRIVER_BLINKY_H_ */

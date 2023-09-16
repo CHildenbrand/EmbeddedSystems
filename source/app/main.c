@@ -10,6 +10,8 @@
 
 #include "stm32g4xx_hal.h"
 #include "gpio.h"
+#include "dma.h"
+#include "crc.h"
 
 #include "main_state.h"
 
@@ -17,6 +19,9 @@
 
 /* Private enumerations-------------------------------------------------------*/
 
+/* Private variables ---------------------------------------------------------*/
+
+static MainState m_mainState;
 /* Private functions ---------------------------------------------------------*/
 
 void SystemClock_Config(void);
@@ -38,12 +43,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_CRC_Init();
+  MX_DMA_Init();
 
-  MainState_Init();
+  MainState_Init(&m_mainState);
 
   while (1)
   {
-	  MainState_Cyclic();
+	  MainState_Cyclic(&m_mainState);
   }
 }
 
