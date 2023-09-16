@@ -61,8 +61,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 512K
+RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 12K
+FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 32K
 }
 
 /* Define output sections */
@@ -147,6 +147,10 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
 
+  .end_of_flash :
+  {
+    
+  } > FLASH
   
   /* Uninitialized data section */
   . = ALIGN(4);
@@ -175,7 +179,19 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
+  .fill :
+  {  
+    . = ALIGN(4);
+    __START_CRC_FLASH = ORIGIN (FLASH);
   
+    FILL(0x00) /* fill with non-erase pattern */
+
+    . = ORIGIN(FLASH) + LENGTH(FLASH) - 4;
+    /* _efill = .; */
+    __END_CRC_FLASH = .;
+    . = ALIGN(4);
+    LONG(0xFFFFFFFF) /* place holder of crc-32 */
+  } > FLASH
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
