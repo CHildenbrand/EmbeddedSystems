@@ -1,5 +1,5 @@
 # project specific make file
-TARGET = gpio_led_on
+TARGET = project
 
 -include FileList.mak
 

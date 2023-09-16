@@ -1,7 +1,7 @@
 @echo off
 pushd
 
-set "PROJECT_NAME=GPIO"
+set "PROJECT_NAME=project"
 
 REM Set Toolchain Paths
 @echo Set root paths...
