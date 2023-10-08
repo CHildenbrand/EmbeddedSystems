@@ -7,31 +7,31 @@ TARGET = project
 
 -include $(wildcard $(OBJ_DIR)/*.d)
 
-Debug: $(ELF_FILE) $(HEX_FILE)
+Debug: PostProcess
+
+PostProcess: $(HEX_FILE)
+	$(POST_PROCESS) $(PROJECT_PATH) $< 0x00
 
 $(OBJ_DIR)/%.o: %.c | Directories
 	@echo Compiling $*.c...
-	$(CC) $(CFLAGS) -c $(filter %/$*.c, $(C_SOURCES)) -o $@
-
-#Add Line 17 to Line 15 to show preprocessor output
-#$(CC) $(CFLAGS) -E -dN -c $(filter %/$*.c, $(C_SOURCES)) -o ${OBJ_DIR}/$*.pp
+	@$(CC) $(CFLAGS) -c $(filter %/$*.c, $(C_SOURCES)) -o $@
 
 $(OBJ_DIR)/%.o: %.s | Directories
 	@echo Assembling $*.c...
-	$(CC) $(ASFLAGS) -c $(filter %/$*.s, $(ASM_SOURCES)) -o $@
+	@$(CC) $(ASFLAGS) -c $(filter %/$*.s, $(ASM_SOURCES)) -o $@
 
-$(OUT_DIR)/$(TARGET).elf: $(OBJS)
+$(ELF_FILE): $(OBJS)
 	@echo Linking $(notdir $@)...
-	$(LD) $(OBJS) $(LDFLAGS) -o $@
+	@$(LD) $(OBJS) $(LDFLAGS) -o $@
 	@echo Display sizes...
-	$(SZ) $@
+	@$(SZ) $@
 
-$(OUT_DIR)/%.hex: $(OUT_DIR)/%.elf
-	@echo Generating $(notdir $@)...
+$(HEX_FILE): $(ELF_FILE)
+	@echo Generating Hex-File $(notdir $@)...
 	$(CP) -O ihex $< $@
-		
-$(OUT_DIR)/%.bin: $(OUT_DIR)/$(TARGET).elf
-	@echo Generating binary $(notdir $@)...
+
+$(BIN_FILE): $(ELF_FILE)
+	@echo Generating Binary-File $(notdir $@)...
 	$(CP) -O binary $< $@
 
 Directories:

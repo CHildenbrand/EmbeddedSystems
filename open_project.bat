@@ -16,6 +16,7 @@ set "DOXYGEN_PATH=%TOOLS_PATH%\doxygen\bin"
 @echo Set execution paths...
 set "ECLIPSE=%ECLIPSE_ROOT_PATH%\eclipse.exe"
 set "CC=%COMPILER_ROOT_PATH%\arm-none-eabi-gcc.exe"
+set "LD=%COMPILER_ROOT_PATH%\arm-none-eabi-gcc.exe"
 set "CP=%COMPILER_ROOT_PATH%\arm-none-eabi-objcopy.exe"
 set "SZ=%COMPILER_ROOT_PATH%\arm-none-eabi-size.exe"
 set "GDB=%COMPILER_ROOT_PATH%\arm-none-eabi-gdb.exe"
@@ -30,6 +31,7 @@ set "PROJECT_ROOT_PATH=%cd%"
 set "WORKSPACE_PATH=%PROJECT_ROOT_PATH%\eclipse"
 set "PROJECT_PATH=%WORKSPACE_PATH%\%PROJECT_NAME%"
 set "SVD_FILE_PATH=%PROJECT_ROOT_PATH%\source\lib\STM32G474xx.svd"
+Set "POST_PROCESS=%PROJECT_ROOT_PATH%\tools\post_process.bat"
 
 REM Add root paths to PATH enviroment variables
 

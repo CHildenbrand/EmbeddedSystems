@@ -34,6 +34,4 @@ LDFLAGS += -T$(LDSCRIPT)
 LDFLAGS += -Wl,-Map=$(OUT_DIR)/$(TARGET).map
 LDFLAGS += -Wl,--cref,--gc-sections,--no-warn-rwx-segments
 
-#CC = arm-none-eabi-gcc.exe
 AS = $(CC) -x assembler-with-cpp
-LD = $(CC)
