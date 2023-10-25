@@ -105,14 +105,9 @@ void DrvCrc_Cyclic(DrvCrc *const pThis)
 		/* !!! Blocking wait for DMA complete !!! */
 		//HAL_StatusTypeDef status = HAL_DMA_PollForTransfer(pThis->pCfg->pHdma, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
 
-		//if (status == HAL_OK)
-		//{
-		//	pThis->data.crc_value = pThis->pCfg->pHcrc->Instance->DR;
-		//}
 		if (m_crcAvailable == true)
 		{
-			pThis->data.crc_value = LL_CRC_ReadData32(pThis->pCfg->pHcrc->Instance);
-			/* crc-32 with XorOu=0xFFFFFFFF */
+			/* crc-32 with XorOut=0xFFFFFFFF */
 			pThis->data.crc_value = ~LL_CRC_ReadData32(pThis->pCfg->pHcrc->Instance);
 
 			uint32_t crc_value_flash = pThis->pCfg->pCrcAddress[0u];
@@ -134,7 +129,6 @@ DrvCrcState DrvCrc_GetState (DrvCrc const* const pThis)
 	return pThis->data.state;
 }
 
-//DrvCrcState DrvCrc_IsValid(DrvCrc const* const pThis)
 bool DrvCrc_IsValid(DrvCrc const* const pThis)
 {
 	return pThis->data.isValid;
