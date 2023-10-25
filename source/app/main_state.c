@@ -12,18 +12,16 @@
 
 #include <stdbool.h>
 
-#include "main.h"
+#include "main_state.h"
+#include "driver_blinky.h"
+#include "driver_crc.h"
 #include "stm32g4xx_hal_gpio.h"
+#include "ctor_all.h"
+
 
 /*******************************************************************************
 * Defines
 *******************************************************************************/
-//#define LD2_SW_TOOGLE
-//#define LD2_BUTTON_POLLING
-#define LD2_BUTTON_INT_TOGGLE
-//#define LD2_BUTTON_INT_DOUBLE
-
-#define LD2_SW_TOGGLE_CYCLE ((uint32_t)3500000UL)
 
 /*******************************************************************************
 * Local Types and Typedefs
@@ -40,97 +38,113 @@
 /*******************************************************************************
 * Static Variables
 *******************************************************************************/
-static uint32_t m_MainState_CycleCount = 0u;
-static bool m_MainState_initialized = false;
 
-#if defined (LD2_BUTTON_INT_TOGGLE)
-bool m_Event_UserLedToogle = false;
+static bool MainState_Cyclic_SelfTest(MainState const* pMainState, bool *pError)
+{
+	bool finished = false;
 
-#elif defined (LD2_BUTTON_INT_DOUBLE)
-bool m_Event_UserLedOn = true;
-bool m_Event_UserLedOff = false;
+	DrvCrc_Cyclic(pMainState->pCfg->pDrvCrc);
 
-#endif
+	if (DrvCrc_GetState(pMainState->pCfg->pDrvCrc) == DrvCrcState_Finished)
+	{
+
+		if (DrvCrc_IsValid(pMainState->pCfg->pDrvCrc) != false)
+		{
+			DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_Blinky);
+		}
+		else
+		{
+			DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_On);
+		}
+
+		finished = true;
+	}
+
+	DrvBlinky_Cyclic(pMainState->pCfg->pDrvBlinky);
+
+	return finished;
+}
+
+static void MainState_Cyclic_Running(MainState const* pMainState)
+{
+	DrvBlinky_Cyclic(pMainState->pCfg->pDrvBlinky);
+}
+
+static void MainState_Cyclic_Error(MainState const* pMainState)
+{
+	assert_param(0);
+}
 
 /*******************************************************************************
 * Functions
 *******************************************************************************/
 
-void MainState_Init(void)
+void MainState_Construct (MainState *const pThis, MainStateConfig const* const pCfg)
 {
-	m_MainState_initialized = true;
+	assert_param(pThis != NULL);
+	assert_param(pThis->constructed == false);
+	assert_param(pCfg != NULL);
+
+	pThis->pCfg = pCfg;
+
+	pThis->initialized = false;
+	pThis->constructed = true;
 }
 
-void MainState_Cyclic(void)
+void MainState_Init (MainState *const pThis)
 {
-	m_MainState_CycleCount++;
-#if defined(LD2_BUTTON_POLLING)
-	/* Read Pin State of User Button (Blue) */
-	GPIO_PinState userButtonState =
-			HAL_GPIO_ReadPin(B1_USER_BUTTON_GPIO_Port, B1_USER_BUTTON_Pin);
+	volatile uint32_t wait = 100000u;
+	while(wait--){}
 
-	if (userButtonState == GPIO_PIN_SET)
-	{
-		HAL_GPIO_WritePin(LD2_USER_GPIO_Port, LD2_USER_Pin, GPIO_PIN_RESET);
-	}
-	else
-	{
-		HAL_GPIO_WritePin(LD2_USER_GPIO_Port, LD2_USER_Pin, GPIO_PIN_SET);
-	}
+	assert_param(pThis != NULL);
+	assert_param(pThis->initialized == false);
+	assert_param(pThis->constructed == true);
 
-#elif defined(LD2_BUTTON_INT_TOGGLE)
-	if (m_Event_UserLedToogle)
-	{
-		HAL_GPIO_TogglePin(LD2_USER_GPIO_Port, LD2_USER_Pin);
-		m_Event_UserLedToogle = false;
-	}
+	/* Construct all modules */
+	CtorAll_Construct(pThis);
 
-#elif defined (LD2_BUTTON_INT_DOUBLE)
+	/* Initialize the modules */
+	DrvCrc_Init(pThis->pCfg->pDrvCrc);
 
-	if (m_Event_UserLedOn)
-	{
-		HAL_GPIO_WritePin(LD2_USER_GPIO_Port, LD2_USER_Pin, GPIO_PIN_SET);
-		m_Event_UserLedOn = false;
-	}
-	if (m_Event_UserLedOff)
-	{
-		HAL_GPIO_WritePin(LD2_USER_GPIO_Port, LD2_USER_Pin, GPIO_PIN_RESET);
-		m_Event_UserLedOff = false;
-	}
+	DrvBlinky_Init(pThis->pCfg->pDrvBlinky);
 
-#elif defined(LD2_SW_TOOGLE)
-	if (m_MainState_CycleCount % LD2_SW_TOGGLE_CYCLE == 0u)
-	{
-		HAL_GPIO_TogglePin(LD2_USER_GPIO_Port, LD2_USER_Pin);
-	}
-#elif defined(TIM_INT_TOGGLE)
+	pThis->data.state = MainState_SelfTest;
 
-#endif
-
+	pThis->initialized = true;
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void MainState_Cyclic (MainState *const pThis)
 {
-	if (GPIO_Pin == B1_USER_BUTTON_INT_Pin)
+	assert_param(pThis != NULL);
+	assert_param(pThis->constructed == true);
+	assert_param(pThis->initialized == true);
+
+	pThis->data.cycleCounter++;
+
+	if (pThis->data.state == MainState_SelfTest)
 	{
-
-#if defined (LD2_BUTTON_INT_TOGGLE)
-		/* For single edge solution */
-		m_Event_UserLedToogle = true;
-#elif defined (LD2_BUTTON_INT_DOUBLE)
-		/* For Rising and Falling edge solution */
-		GPIO_PinState userButtonState =
-				HAL_GPIO_ReadPin(B1_USER_BUTTON_INT_GPIO_Port, B1_USER_BUTTON_INT_Pin);
-
-		if (userButtonState == GPIO_PIN_SET)
+		bool error = false;
+		if (MainState_Cyclic_SelfTest(pThis, &error))
 		{
-			m_Event_UserLedOn = true;
+			if (error == true)
+			{
+				pThis->data.state = MainState_Error;
+			}
+			else
+			{
+				pThis->data.state = MainState_Running;
+			}
 		}
-		else
-		{
-			m_Event_UserLedOff = true;
-		}
-#endif
+	}
+	else if (pThis->data.state == MainState_Running)
+	{
+		MainState_Cyclic_Running(pThis);
+	}
+	else if (pThis->data.state == MainState_Error ||
+			pThis->data.state == MainState_Initial)
+	{
+		MainState_Cyclic_Error(pThis);
 	}
 }
+
 

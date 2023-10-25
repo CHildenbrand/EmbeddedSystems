@@ -1,21 +1,20 @@
 /**
- * @file      main_state.h
- * @author    Christian Hildenbrand
- * @date      01.05.2023
+ * @file      driver_crc.h
+ * @author    Hildenbrand, Christian
+ * @date      06.05.2023
  *
- * @brief Header File for Main State Module
+ * @brief [description]
  */
 
-#ifndef MAIN_STATE_H_
-#define MAIN_STATE_H_
+#ifndef DRIVER_CRC_H_
+#define DRIVER_CRC_H_
 
 /*******************************************************************************
 * Includes
 *******************************************************************************/
 #include <stdbool.h>
 
-#include "driver_blinky.h"
-#include "driver_crc.h"
+#include "stm32g4xx_hal.h"
 
 /*******************************************************************************
 * Exported Defines
@@ -27,42 +26,50 @@
 
 typedef enum
 {
-	MainState_Initial,
+	DrvCrcState_Initial,
 
-	MainState_Idle,
+	DrvCrcState_Calculating,
 
-	MainState_SelfTest,
-
-	MainState_Running,
-
-	MainState_Error,
-} MainState_State;
+	DrvCrcState_Finished,
+} DrvCrcState;
 
 typedef struct
 {
-	DrvBlinky *const pDrvBlinky;
+	bool isHardwareCrc;
 
-	DrvCrc *const pDrvCrc;
-} MainStateConfig;
+	DMA_HandleTypeDef *pHdma;
+
+	CRC_HandleTypeDef *pHcrc;
+
+	const uint32_t crcRangeStartAddress;
+
+	const uint32_t crcRangeEndAddress;
+
+	const uint32_t dstAddress;
+
+	const uint32_t *pCrcAddress;
+} DrvCrcCfg;
 
 typedef struct
 {
-	MainState_State state;
+	DrvCrcState state;
 
-	uint32_t cycleCounter;
-} MainState_Data;
+	bool isValid;
+
+	uint32_t crc_value;
+} DrvCrcData;
+
 
 typedef struct
 {
-	bool constructed;
-
-	MainStateConfig const* pCfg;
-
 	bool initialized;
 
-	MainState_Data data;
+	bool constructed;
 
-} MainState;
+	DrvCrcCfg const* pCfg;
+
+	DrvCrcData data;
+} DrvCrc;
 
 /*******************************************************************************
 * Global Variables
@@ -72,10 +79,15 @@ typedef struct
 * Exported Functions
 *******************************************************************************/
 
-void MainState_Construct (MainState *const pThis, MainStateConfig const* const pCfg);
+void DrvCrc_Construct(DrvCrc *const pThis, DrvCrcCfg const* const pCfg);
 
-void MainState_Init(MainState *const pThis);
+void DrvCrc_Init(DrvCrc *const pThis);
 
-void MainState_Cyclic(MainState *const pThis);
+void DrvCrc_Cyclic(DrvCrc *const pThis);
 
-#endif /* MAIN_STATE_H_ */
+DrvCrcState DrvCrc_GetState (DrvCrc const* const pThis);
+
+bool DrvCrc_IsValid(DrvCrc const* const pThis);
+
+
+#endif /* DRIVER_CRC_H_ */
