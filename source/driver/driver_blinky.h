@@ -28,17 +28,17 @@
 
 typedef enum
 {
-	DrvBlinkyState_On,
+    DrvBlinkyState_On,
 
-	DrvBlinkyState_Off,
+    DrvBlinkyState_Off,
 
-	DrvBlinkyState_Blinky
+    DrvBlinkyState_Blinky
 } DrvBlinkyState;
 
 
 typedef struct
 {
-	GPIO_TypeDef *ledPort;
+    GPIO_TypeDef *ledPort;
 
     uint16_t ledPin;
 
@@ -49,30 +49,30 @@ typedef struct
 
 typedef struct
 {
-	uint32_t numberOfLeds;
+    uint32_t numberOfLeds;
 
-	uint32_t blinkyCycleTotal;
+    uint32_t blinkyCycleTotal;
 
-	DrvGpio *pDrvGpio;
+    DrvGpio *pDrvGpio;
 } DrvBlinkyCfg;
 
 typedef struct
 {
-	DrvBlinkyState state;
+    DrvBlinkyState state;
 
-	uint32_t blinkyCycleCnt;
+    uint32_t blinkyCycleCnt;
 } DrvBlinkyData;
 
 
 typedef struct
 {
-	bool initialized;
+    bool initialized;
 
-	bool constructed;
+    bool constructed;
 
-	DrvBlinkyCfg const* pCfg;
+    DrvBlinkyCfg const* pCfg;
 
-	DrvBlinkyData data;
+    DrvBlinkyData data;
 } DrvBlinky;
 
 /*******************************************************************************

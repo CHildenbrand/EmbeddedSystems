@@ -26,49 +26,49 @@
 
 typedef enum
 {
-	DrvCrcState_Initial,
+    DrvCrcState_Initial,
 
-	DrvCrcState_Calculating,
+    DrvCrcState_Calculating,
 
-	DrvCrcState_Finished,
+    DrvCrcState_Finished,
 } DrvCrcState;
 
 typedef struct
 {
-	bool isHardwareCrc;
+    bool isHardwareCrc;
 
-	DMA_HandleTypeDef *pHdma;
+    DMA_HandleTypeDef *pHdma;
 
-	CRC_HandleTypeDef *pHcrc;
+    CRC_HandleTypeDef *pHcrc;
 
-	const uint32_t crcRangeStartAddress;
+    const uint32_t crcRangeStartAddress;
 
-	const uint32_t crcRangeEndAddress;
+    const uint32_t crcRangeEndAddress;
 
-	const uint32_t dstAddress;
+    const uint32_t dstAddress;
 
-	const uint32_t *pCrcAddress;
+    const uint32_t *pCrcAddress;
 } DrvCrcCfg;
 
 typedef struct
 {
-	DrvCrcState state;
+    DrvCrcState state;
 
-	bool isValid;
+    bool isValid;
 
-	uint32_t crc_value;
+    uint32_t crc_value;
 } DrvCrcData;
 
 
 typedef struct
 {
-	bool initialized;
+    bool initialized;
 
-	bool constructed;
+    bool constructed;
 
-	DrvCrcCfg const* pCfg;
+    DrvCrcCfg const* pCfg;
 
-	DrvCrcData data;
+    DrvCrcData data;
 } DrvCrc;
 
 /*******************************************************************************

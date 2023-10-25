@@ -54,45 +54,45 @@ extern const uint32_t __START_CRC_FLASH[];
 void CtorAll_Construct(MainState *const pThis)
 {
 
-	static DrvBlinky m_drvBlinky;
+    static DrvBlinky m_drvBlinky;
 
-	static DrvCrc m_drvCrc;
+    static DrvCrc m_drvCrc;
 
-	static DrvCrcCfg m_drvCrcCfg =
-	{
-		.pHdma = &hdma_memtomem_dma1_channel1,
+    static DrvCrcCfg m_drvCrcCfg =
+    {
+        .pHdma = &hdma_memtomem_dma1_channel1,
         .pHcrc = &hcrc,
         .dstAddress = (uint32_t)&CRC->DR,
-		.isHardwareCrc = true,
+        .isHardwareCrc = true,
         .crcRangeStartAddress = (const uint32_t)__START_CRC_FLASH,
         .crcRangeEndAddress = (const uint32_t)__END_CRC_FLASH,
-		.pCrcAddress = (const uint32_t *)__END_CRC_FLASH
-	};
+        .pCrcAddress = (const uint32_t *)__END_CRC_FLASH
+    };
 
-	DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);
+    DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);
 
-	static DrvGpio m_drvGpio =
-	{
-		.ledPort = LD2_USER_GPIO_Port,
-		.ledPin = LD2_USER_Pin,
-	    .initValue = GPIO_PIN_RESET,
-	    .currentValue = GPIO_PIN_RESET
-	};
+    static DrvGpio m_drvGpio =
+    {
+        .ledPort = LD2_USER_GPIO_Port,
+        .ledPin = LD2_USER_Pin,
+        .initValue = GPIO_PIN_RESET,
+        .currentValue = GPIO_PIN_RESET
+    };
 
-	static DrvBlinkyCfg m_drvBlinkyCfg =
-	{
-		.numberOfLeds = NUMBER_OF_LEDS,
-		.blinkyCycleTotal = BLINKY_CYCLE_MAIN_CYCLE_COUNT,
+    static DrvBlinkyCfg m_drvBlinkyCfg =
+    {
+        .numberOfLeds = NUMBER_OF_LEDS,
+        .blinkyCycleTotal = BLINKY_CYCLE_MAIN_CYCLE_COUNT,
         .pDrvGpio = &m_drvGpio
-	};
+    };
 
-	DrvBlinky_Construct(&m_drvBlinky, &m_drvBlinkyCfg);
+    DrvBlinky_Construct(&m_drvBlinky, &m_drvBlinkyCfg);
 
-	static MainStateConfig m_mainStateCfg =
-	{
-		.pDrvBlinky =  &m_drvBlinky,
-		.pDrvCrc =  &m_drvCrc,
-	};
+    static MainStateConfig m_mainStateCfg =
+    {
+        .pDrvBlinky =  &m_drvBlinky,
+        .pDrvCrc =  &m_drvCrc,
+    };
 
-	MainState_Construct(pThis, &m_mainStateCfg);
+    MainState_Construct(pThis, &m_mainStateCfg);
 }
