@@ -27,40 +27,40 @@
 
 typedef enum
 {
-	MainState_Initial,
+    MainState_Initial,
 
-	MainState_Idle,
+    MainState_Idle,
 
-	MainState_SelfTest,
+    MainState_SelfTest,
 
-	MainState_Running,
+    MainState_Running,
 
-	MainState_Error,
+    MainState_Error,
 } MainState_State;
 
 typedef struct
 {
-	DrvBlinky *const pDrvBlinky;
+    DrvBlinky *const pDrvBlinky;
 
-	DrvCrc *const pDrvCrc;
+    DrvCrc *const pDrvCrc;
 } MainStateConfig;
 
 typedef struct
 {
-	MainState_State state;
+    MainState_State state;
 
-	uint32_t cycleCounter;
+    uint32_t cycleCounter;
 } MainState_Data;
 
 typedef struct
 {
-	bool constructed;
+    bool constructed;
 
-	MainStateConfig const* pCfg;
+    MainStateConfig const* pCfg;
 
-	bool initialized;
+    bool initialized;
 
-	MainState_Data data;
+    MainState_Data data;
 
 } MainState;
 

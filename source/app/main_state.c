@@ -41,38 +41,38 @@
 
 static bool MainState_Cyclic_SelfTest(MainState const* pMainState, bool *pError)
 {
-	bool finished = false;
+    bool finished = false;
 
-	DrvCrc_Cyclic(pMainState->pCfg->pDrvCrc);
+    DrvCrc_Cyclic(pMainState->pCfg->pDrvCrc);
 
-	if (DrvCrc_GetState(pMainState->pCfg->pDrvCrc) == DrvCrcState_Finished)
-	{
+    if (DrvCrc_GetState(pMainState->pCfg->pDrvCrc) == DrvCrcState_Finished)
+    {
 
-		if (DrvCrc_IsValid(pMainState->pCfg->pDrvCrc) != false)
-		{
-			DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_Blinky);
-		}
-		else
-		{
-			DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_On);
-		}
+        if (DrvCrc_IsValid(pMainState->pCfg->pDrvCrc) != false)
+        {
+            DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_Blinky);
+        }
+        else
+        {
+            DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_On);
+        }
 
-		finished = true;
-	}
+        finished = true;
+    }
 
-	DrvBlinky_Cyclic(pMainState->pCfg->pDrvBlinky);
+    DrvBlinky_Cyclic(pMainState->pCfg->pDrvBlinky);
 
-	return finished;
+    return finished;
 }
 
 static void MainState_Cyclic_Running(MainState const* pMainState)
 {
-	DrvBlinky_Cyclic(pMainState->pCfg->pDrvBlinky);
+    DrvBlinky_Cyclic(pMainState->pCfg->pDrvBlinky);
 }
 
 static void MainState_Cyclic_Error(MainState const* pMainState)
 {
-	assert_param(0);
+    assert_param(0);
 }
 
 /*******************************************************************************
@@ -81,70 +81,70 @@ static void MainState_Cyclic_Error(MainState const* pMainState)
 
 void MainState_Construct (MainState *const pThis, MainStateConfig const* const pCfg)
 {
-	assert_param(pThis != NULL);
-	assert_param(pThis->constructed == false);
-	assert_param(pCfg != NULL);
+    assert_param(pThis != NULL);
+    assert_param(pThis->constructed == false);
+    assert_param(pCfg != NULL);
 
-	pThis->pCfg = pCfg;
+    pThis->pCfg = pCfg;
 
-	pThis->initialized = false;
-	pThis->constructed = true;
+    pThis->initialized = false;
+    pThis->constructed = true;
 }
 
 void MainState_Init (MainState *const pThis)
 {
-	volatile uint32_t wait = 100000u;
-	while(wait--){}
+    volatile uint32_t wait = 100000u;
+    while(wait--) {}
 
-	assert_param(pThis != NULL);
-	assert_param(pThis->initialized == false);
-	assert_param(pThis->constructed == true);
+    assert_param(pThis != NULL);
+    assert_param(pThis->initialized == false);
+    assert_param(pThis->constructed == true);
 
-	/* Construct all modules */
-	CtorAll_Construct(pThis);
+    /* Construct all modules */
+    CtorAll_Construct(pThis);
 
-	/* Initialize the modules */
-	DrvCrc_Init(pThis->pCfg->pDrvCrc);
+    /* Initialize the modules */
+    DrvCrc_Init(pThis->pCfg->pDrvCrc);
 
-	DrvBlinky_Init(pThis->pCfg->pDrvBlinky);
+    DrvBlinky_Init(pThis->pCfg->pDrvBlinky);
 
-	pThis->data.state = MainState_SelfTest;
+    pThis->data.state = MainState_SelfTest;
 
-	pThis->initialized = true;
+    pThis->initialized = true;
 }
 
 void MainState_Cyclic (MainState *const pThis)
 {
-	assert_param(pThis != NULL);
-	assert_param(pThis->constructed == true);
-	assert_param(pThis->initialized == true);
+    assert_param(pThis != NULL);
+    assert_param(pThis->constructed == true);
+    assert_param(pThis->initialized == true);
 
-	pThis->data.cycleCounter++;
+    pThis->data.cycleCounter++;
 
-	if (pThis->data.state == MainState_SelfTest)
-	{
-		bool error = false;
-		if (MainState_Cyclic_SelfTest(pThis, &error))
-		{
-			if (error == true)
-			{
-				pThis->data.state = MainState_Error;
-			}
-			else
-			{
-				pThis->data.state = MainState_Running;
-			}
-		}
-	}
-	else if (pThis->data.state == MainState_Running)
-	{
-		MainState_Cyclic_Running(pThis);
-	}
-	else if (pThis->data.state == MainState_Error ||
-			pThis->data.state == MainState_Initial)
-	{
-		MainState_Cyclic_Error(pThis);
-	}
+    if (pThis->data.state == MainState_SelfTest)
+    {
+        bool error = false;
+        if (MainState_Cyclic_SelfTest(pThis, &error))
+        {
+            if (error == true)
+            {
+                pThis->data.state = MainState_Error;
+            }
+            else
+            {
+                pThis->data.state = MainState_Running;
+            }
+        }
+    }
+    else if (pThis->data.state == MainState_Running)
+    {
+        MainState_Cyclic_Running(pThis);
+    }
+    else if (pThis->data.state == MainState_Error ||
+             pThis->data.state == MainState_Initial)
+    {
+        MainState_Cyclic_Error(pThis);
+    }
 }
 
 

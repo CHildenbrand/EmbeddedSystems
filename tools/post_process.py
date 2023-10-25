@@ -16,7 +16,6 @@ proj_loc_rel_path = argv[1]
 hex_file_rel_path = argv[2]
 padding = int(argv[3],16)
    
-    
 hex_file_in_abs_path = os.path.join(proj_loc_rel_path, hex_file_rel_path).replace("/","\\")
 
 # Read the Hex file

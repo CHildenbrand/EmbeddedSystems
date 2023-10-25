@@ -1,10 +1,14 @@
-This example illustrates the functionality of General Purpose Input Output Peripheral (GPIO)
+This example illustrates the prebuild and postbuild step.
 
-1. Configuration as Input or Output Pin
-2. Read Pin cyclically (Polling)
-3. Rising or Falling Edge Read (EXTI)
-4. Write Pin (Output)
+Prebuild includes:
+ # Astyling *.c and *.h files from \source folder
+ # Doxygen generates documentation of symbols based on comments
 
-Remark:
-Input Pin connected to USER Button (B1)
-Output Pin connected to USER LED (LD2)
+Postbuild includes: 
+ # Crc-32 calculation and injection over application footprint
+
+Software Feature: Runtime Crc Calculation
+ # Usage of CRC Perpheral
+ # Usage of DMA Copy from Flash to Peripheral memory
+ # Integrity Check
+ # Blinky if crc matches, lights on constant else
