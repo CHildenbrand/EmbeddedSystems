@@ -56,6 +56,8 @@ static bool MainState_Cyclic_SelfTest(MainState const* pMainState, bool *pError)
 		{
 			DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_On);
 		}
+
+		finished = true;
 	}
 
 	DrvBlinky_Cyclic(pMainState->pCfg->pDrvBlinky);
