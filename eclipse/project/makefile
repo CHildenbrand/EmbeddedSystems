@@ -7,13 +7,13 @@ TARGET = project
 
 -include $(wildcard $(OBJ_DIR)/*.d)
 
-Debug: PostProcess
+Build: PostBuild
 
-$(OBJ_DIR)/%.o: %.c | PreProcess
+$(OBJ_DIR)/%.o: %.c | PreBuild
 	@echo Compiling $*.c...
 	@$(CC) $(CFLAGS) -c $(filter %/$*.c, $(C_SOURCES)) -o $@
 
-$(OBJ_DIR)/%.o: %.s | PreProcess
+$(OBJ_DIR)/%.o: %.s | PreBuild
 	@echo Assembling $*.s...
 	@$(CC) $(ASFLAGS) -c $(filter %/$*.s, $(ASM_SOURCES)) -o $@
 
@@ -27,12 +27,18 @@ $(HEX_FILE): $(ELF_FILE)
 	@echo Generating Hex-File $(notdir $@)...
 	@$(CP) -O ihex $< $@
 
-PreProcess: Directories
-	@py $(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE)
+# $(PRE_PROCESS): --verbose as 4th parameter outputs the list of processed files
+
+PreBuild: Directories
+	@echo Preprocessing files...
+	@$(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE) $(ASTYLE_CFG_PATH)
 	@$(DOXYGEN) $(DOXYFILE_PATH) 2>NUL
 
-PostProcess: $(HEX_FILE)
-	@$(POST_PROCESS) $(PROJECT_PATH) $< 0x00
+# $(POST_PROCESS): --verbose as 2nd parameter outputs value and address of crc
+
+PostBuild: $(HEX_FILE)
+	@echo Postprocessing files...
+	@$(POST_PROCESS) $(PROJECT_PATH) $<
 
 Directories:
 	@if not exist $(OUT_DIR) (@echo Parser: $(CC) -c $(CFLAGS) $< -o $@)

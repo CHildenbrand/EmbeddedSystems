@@ -30,6 +30,6 @@
 * Exported Functions
 *******************************************************************************/
 
-void CtorAll_Construct(MainState *const pMainState);
+void CtorAll_Construct(MainState* const pMainState);
 
 #endif /* CTOR_ALL_H_ */

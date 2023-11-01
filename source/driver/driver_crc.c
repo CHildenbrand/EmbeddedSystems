@@ -42,7 +42,7 @@ static bool m_crcAvailable = false;
 * Static Functions
 *******************************************************************************/
 
-static void DrvCrc_HandleDmaTxComplete(DMA_HandleTypeDef *pHdma)
+static void DrvCrc_HandleDmaTxComplete(DMA_HandleTypeDef* pHdma)
 {
     flashCrcEndTime_SysTickValue = SysTick->VAL / SYS_TICKS_PER_US;
     flashCrcEndTime_SysTickIrqCnt = HAL_GetTick();
@@ -54,7 +54,7 @@ static void DrvCrc_HandleDmaTxComplete(DMA_HandleTypeDef *pHdma)
 * Public Functions
 *******************************************************************************/
 
-void DrvCrc_Construct(DrvCrc *const pThis, DrvCrcCfg const* const pCfg)
+void DrvCrc_Construct(DrvCrc* const pThis, DrvCrcCfg const* const pCfg)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->constructed == false);
@@ -66,7 +66,7 @@ void DrvCrc_Construct(DrvCrc *const pThis, DrvCrcCfg const* const pCfg)
     pThis->constructed = true;
 }
 
-void DrvCrc_Init(DrvCrc *const pThis)
+void DrvCrc_Init(DrvCrc* const pThis)
 {
     /* Initialize Object only if pointer not null and constructed */
     assert_param(pThis != NULL);
@@ -95,7 +95,7 @@ void DrvCrc_Init(DrvCrc *const pThis)
     pThis->initialized = true;
 }
 
-void DrvCrc_Cyclic(DrvCrc *const pThis)
+void DrvCrc_Cyclic(DrvCrc* const pThis)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->initialized == true);
@@ -124,7 +124,7 @@ void DrvCrc_Cyclic(DrvCrc *const pThis)
     }
 }
 
-DrvCrcState DrvCrc_GetState (DrvCrc const* const pThis)
+DrvCrcState DrvCrc_GetState(DrvCrc const* const pThis)
 {
     return pThis->data.state;
 }

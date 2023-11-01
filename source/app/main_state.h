@@ -40,9 +40,9 @@ typedef enum
 
 typedef struct
 {
-    DrvBlinky *const pDrvBlinky;
+    DrvBlinky* const pDrvBlinky;
 
-    DrvCrc *const pDrvCrc;
+    DrvCrc* const pDrvCrc;
 } MainStateConfig;
 
 typedef struct
@@ -72,10 +72,10 @@ typedef struct
 * Exported Functions
 *******************************************************************************/
 
-void MainState_Construct (MainState *const pThis, MainStateConfig const* const pCfg);
+void MainState_Construct(MainState* const pThis, MainStateConfig const* const pCfg);
 
-void MainState_Init(MainState *const pThis);
+void MainState_Init(MainState* const pThis);
 
-void MainState_Cyclic(MainState *const pThis);
+void MainState_Cyclic(MainState* const pThis);
 
 #endif /* MAIN_STATE_H_ */

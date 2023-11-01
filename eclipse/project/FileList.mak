@@ -4,10 +4,8 @@
 OBJ_DIR = target\obj
 OUT_DIR = target\out
 
-ELF_FILE = $(OUT_DIR)/$(TARGET).elf
-HEX_FILE = $(OUT_DIR)/$(TARGET).hex
-BIN_FILE = $(OUT_DIR)/$(TARGET).bin
-
+ELF_FILE = $(OUT_DIR)\$(TARGET).elf
+HEX_FILE = $(OUT_DIR)\$(TARGET).hex
 
 # List of Source Files and Include Files
 C_SOURCES =  ../../source/app/ctor_all.c \

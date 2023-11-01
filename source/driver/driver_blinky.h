@@ -38,7 +38,7 @@ typedef enum
 
 typedef struct
 {
-    GPIO_TypeDef *ledPort;
+    GPIO_TypeDef* ledPort;
 
     uint16_t ledPin;
 
@@ -53,7 +53,7 @@ typedef struct
 
     uint32_t blinkyCycleTotal;
 
-    DrvGpio *pDrvGpio;
+    DrvGpio* pDrvGpio;
 } DrvBlinkyCfg;
 
 typedef struct
@@ -83,12 +83,12 @@ typedef struct
 * Exported Functions
 *******************************************************************************/
 
-void DrvBlinky_Construct(DrvBlinky *const pThis, DrvBlinkyCfg const* const pCfg);
+void DrvBlinky_Construct(DrvBlinky* const pThis, DrvBlinkyCfg const* const pCfg);
 
-void DrvBlinky_Init(DrvBlinky *const pThis);
+void DrvBlinky_Init(DrvBlinky* const pThis);
 
-void DrvBlinky_Cyclic(DrvBlinky *const pThis);
+void DrvBlinky_Cyclic(DrvBlinky* const pThis);
 
-void DrvBlinky_SetState(DrvBlinky *const pThis, DrvBlinkyState state);
+void DrvBlinky_SetState(DrvBlinky* const pThis, DrvBlinkyState state);
 
 #endif /* DRIVER_BLINKY_H_ */

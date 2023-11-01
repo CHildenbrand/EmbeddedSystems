@@ -1,0 +1,16 @@
+# https://astyle.sourceforge.net/astyle.html
+--style=allman
+-p # Insert space padding around operators
+-q # Quiet mode
+-n # Suppress .orig file generation
+-S # Ident switch blocks
+-K # Ident case 
+-xW # Ident Preprocessor blocks
+-Y # Ident Comments
+-F # Pad enmpty lines around header blocks
+-U # Remove extra space padding around parens
+-H # Add space padding after if, for, while 
+-k1 # Attach a pointer to the variable type
+-j # Add braces to unbraced one line
+-z1 # Windows line end style (CRLF)
+-W3 # Align & to name

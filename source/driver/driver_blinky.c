@@ -32,7 +32,7 @@
 * Static Variables
 *******************************************************************************/
 
-static void DrvBlinky_InitPin (DrvGpio *const pDrvGpio)
+static void DrvBlinky_InitPin(DrvGpio* const pDrvGpio)
 {
     HAL_GPIO_WritePin(pDrvGpio->ledPort, pDrvGpio->ledPin, pDrvGpio->initValue);
 
@@ -40,26 +40,27 @@ static void DrvBlinky_InitPin (DrvGpio *const pDrvGpio)
 }
 
 
-static void DrvBlinky_SetPin (DrvGpio *const pDrvGpio)
+static void DrvBlinky_SetPin(DrvGpio* const pDrvGpio)
 {
     HAL_GPIO_WritePin(pDrvGpio->ledPort, pDrvGpio->ledPin, GPIO_PIN_SET);
 
     pDrvGpio->currentValue = GPIO_PIN_SET;
 }
 
-static void DrvBlinky_ResetPin (DrvGpio *const pDrvGpio)
+static void DrvBlinky_ResetPin(DrvGpio* const pDrvGpio)
 {
     HAL_GPIO_WritePin(pDrvGpio->ledPort, pDrvGpio->ledPin, GPIO_PIN_RESET);
 
     pDrvGpio->currentValue = GPIO_PIN_RESET;
 }
 
-static void DrvBlinky_TogglePin (DrvGpio * const pDrvGpio)
+static void DrvBlinky_TogglePin(DrvGpio* const pDrvGpio)
 {
     if (pDrvGpio->currentValue != GPIO_PIN_RESET)
     {
         DrvBlinky_ResetPin(pDrvGpio);
     }
+
     else
     {
         DrvBlinky_SetPin(pDrvGpio);
@@ -70,7 +71,7 @@ static void DrvBlinky_TogglePin (DrvGpio * const pDrvGpio)
 * Functions
 *******************************************************************************/
 
-void DrvBlinky_Construct(DrvBlinky *const pThis, DrvBlinkyCfg const* const pCfg)
+void DrvBlinky_Construct(DrvBlinky* const pThis, DrvBlinkyCfg const* const pCfg)
 {
     assert_param(pThis->constructed == false);
 
@@ -80,7 +81,7 @@ void DrvBlinky_Construct(DrvBlinky *const pThis, DrvBlinkyCfg const* const pCfg)
 }
 
 
-void DrvBlinky_Init(DrvBlinky *const pThis)
+void DrvBlinky_Init(DrvBlinky* const pThis)
 {
     /* Initialize Object only if pointer not null and constructed */
     assert_param(pThis != NULL);
@@ -92,7 +93,7 @@ void DrvBlinky_Init(DrvBlinky *const pThis)
 }
 
 
-void DrvBlinky_Cyclic(DrvBlinky *const pThis)
+void DrvBlinky_Cyclic(DrvBlinky* const pThis)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->initialized == true);
@@ -101,10 +102,12 @@ void DrvBlinky_Cyclic(DrvBlinky *const pThis)
     {
         DrvBlinky_SetPin(pThis->pCfg->pDrvGpio);
     }
+
     else if (pThis->data.state  == DrvBlinkyState_Off)
     {
         DrvBlinky_ResetPin(pThis->pCfg->pDrvGpio);
     }
+
     else if (pThis->data.state  == DrvBlinkyState_Blinky)
     {
         pThis->data.blinkyCycleCnt++;
@@ -119,7 +122,7 @@ void DrvBlinky_Cyclic(DrvBlinky *const pThis)
     }
 }
 
-void DrvBlinky_SetState (DrvBlinky *const pThis, DrvBlinkyState state)
+void DrvBlinky_SetState(DrvBlinky* const pThis, DrvBlinkyState state)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->initialized == true);
