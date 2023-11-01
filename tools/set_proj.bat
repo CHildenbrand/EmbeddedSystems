@@ -1,6 +1,6 @@
 
 REM Set Project Paths
-@echo Set project paths...
+@echo Set Project Paths...
 set "PROJECT_ROOT_PATH=%cd%"
 set "WORKSPACE_PATH=%PROJECT_ROOT_PATH%\eclipse"
 set "PROJECT_PATH=%WORKSPACE_PATH%\%PROJECT_NAME%"

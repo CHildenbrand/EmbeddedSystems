@@ -4,38 +4,38 @@ set "PROJECT_NAME=project"
 pushd 
 
 call tools/set_env.bat
-@if not errorlevel 0 goto Wrong_Env_Set
 
 call tools/set_proj.bat
-@if not errorlevel 0 goto Wrong_Proj_Set
 
 call tools/check_paths.bat
-@if not errorlevel 0 goto Wrong_Paths
+if %errorlevel% neq 0 goto Wrong_Paths
 
-@echo on
 call tools/check_versions.bat
-@if not errorlevel 0 goto Wrong_Versions
+if %errorlevel% neq 0 goto Wrong_Versions
 
 call tools/start_eclipse_clean.bat
-@if not errorlevel 0 goto Wrong_Start_Eclipse
+if %errorlevel% neq 0 goto Wrong_Start_Eclipse
 
 @popd
 @goto Start_Eclipse_Successful
 
 :Wrong_Paths
 @echo check_paths.bat with errors!
-pause 
-exit 1
+set errorlevel=1
+pause
+goto :eof
 
 :Wrong_Versions
 @echo check_versions.bat with errors!
+set errorlevel=2
 pause
-exit 4
+goto :eof
 
 :Wrong_Start_Eclipse
 @echo start_eclipse_clean.bat with errors!
+set errorlevel=3
 pause
-exit 5
+goto :eof
 
 :Start_Eclipse_Successful
 @echo Start of Eclipse was succesful!
