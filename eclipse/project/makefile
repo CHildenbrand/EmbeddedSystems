@@ -7,13 +7,13 @@ TARGET = project
 
 -include $(wildcard $(OBJ_DIR)/*.d)
 
-Debug: PostProcess
+Build: PostBuild
 
-$(OBJ_DIR)/%.o: %.c | PreProcess
+$(OBJ_DIR)/%.o: %.c | PreBuild
 	@echo Compiling $*.c...
 	@$(CC) $(CFLAGS) -c $(filter %/$*.c, $(C_SOURCES)) -o $@
 
-$(OBJ_DIR)/%.o: %.s | PreProcess
+$(OBJ_DIR)/%.o: %.s | PreBuild
 	@echo Assembling $*.s...
 	@$(CC) $(ASFLAGS) -c $(filter %/$*.s, $(ASM_SOURCES)) -o $@
 
@@ -29,14 +29,14 @@ $(HEX_FILE): $(ELF_FILE)
 
 # $(PRE_PROCESS): --verbose as 4th parameter outputs the list of processed files
 
-PreProcess: Directories
+PreBuild: Directories
 	@echo Preprocessing files...
 	@$(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE) $(ASTYLE_CFG_PATH)
 	@$(DOXYGEN) $(DOXYFILE_PATH) 2>NUL
 
 # $(POST_PROCESS): --verbose as 2nd parameter outputs value and address of crc
 
-PostProcess: $(HEX_FILE)
+PostBuild: $(HEX_FILE)
 	@echo Postprocessing files...
 	@$(POST_PROCESS) $(PROJECT_PATH) $<
 
