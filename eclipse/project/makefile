@@ -28,6 +28,7 @@ $(HEX_FILE): $(ELF_FILE)
 	@$(CP) -O ihex $< $@
 
 PreProcess: Directories
+	@echo Preprocessing files...
 	@py $(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE)
 	@$(DOXYGEN) $(DOXYFILE_PATH) 2>NUL
 
