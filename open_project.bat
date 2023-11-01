@@ -1,49 +1,41 @@
 @echo off
-pushd
-
+set errorlevel=0
 set "PROJECT_NAME=project"
+pushd 
 
-REM Set Toolchain Paths
-@echo Set root paths...
-set "TOOLS_PATH=C:\Tools"
-set "ECLIPSE_ROOT_PATH=%TOOLS_PATH%\eclipse"
-set "COMPILER_ROOT_PATH=%TOOLS_PATH%\ArmGnuToolchain\bin"
-set "ASTYLE_ROOT_PATH=%TOOLS_PATH%\Astyle"
-set "MAKE_ROOT_PATH=%TOOLS_PATH%\MinGW\bin"
-set "OPENOCD_PATH=%TOOLS_PATH%\openocd\bin"
-set "DOXYGEN_PATH=%TOOLS_PATH%\doxygen\bin"
+call tools/set_env.bat
+@if not errorlevel 0 goto Wrong_Env_Set
 
-@echo Set execution paths...
-set "ECLIPSE=%ECLIPSE_ROOT_PATH%\eclipse.exe"
-set "CC=%COMPILER_ROOT_PATH%\arm-none-eabi-gcc.exe"
-set "LD=%COMPILER_ROOT_PATH%\arm-none-eabi-gcc.exe"
-set "CP=%COMPILER_ROOT_PATH%\arm-none-eabi-objcopy.exe"
-set "SZ=%COMPILER_ROOT_PATH%\arm-none-eabi-size.exe"
-set "GDB=%COMPILER_ROOT_PATH%\arm-none-eabi-gdb.exe"
-set "ASTYLE=%ASTYLE_ROOT_PATH%\astyle.exe"
-set "MAKE_EXE=%MAKE_ROOT_PATH%\mingw32-make.exe"
-set "OPENOCD=%OPENOCD_PATH%\openocd.exe"
-Set "DOXYGEN=%DOXYGEN_PATH%\doxygen.exe"
+call tools/set_proj.bat
+@if not errorlevel 0 goto Wrong_Proj_Set
 
-REM Set Project Paths
-@echo Set project paths...
-set "PROJECT_ROOT_PATH=%cd%"
-set "WORKSPACE_PATH=%PROJECT_ROOT_PATH%\eclipse"
-set "PROJECT_PATH=%WORKSPACE_PATH%\%PROJECT_NAME%"
-set "SVD_FILE_PATH=%PROJECT_ROOT_PATH%\source\lib\STM32G474xx.svd"
-set "PRE_PROCESS=%PROJECT_ROOT_PATH%\tools\pre_process.py"
-Set "POST_PROCESS=%PROJECT_ROOT_PATH%\tools\post_process.bat"
-set "DOXYFILE_PATH=%PROJECT_PATH%\Doxyfile.txt"
+call tools/check_paths.bat
+@if not errorlevel 0 goto Wrong_Paths
 
-REM Add root paths to PATH enviroment variables
+@echo on
+call tools/check_versions.bat
+@if not errorlevel 0 goto Wrong_Versions
 
-if not exist %WORKSPACE_PATH%\.metadata (
-	@echo Import eclipse project %PROJECT_NAME% in workspace at %WORKSPACE_PATH%
-	%ECLIPSE% -nosplash -no-indexer -application org.eclipse.cdt.managedbuilder.core.headlessbuild -import "%PROJECT_PATH%" -data "%WORKSPACE_PATH%"
-) 
+call tools/start_eclipse_clean.bat
+@if not errorlevel 0 goto Wrong_Start_Eclipse
 
-@echo Open eclipse project %PROJECT_NAME%
-start %ECLIPSE% -data %WORKSPACE_PATH%
+@popd
+@goto Start_Eclipse_Successful
 
-popd
-exit %errorlevel%
+:Wrong_Paths
+@echo check_paths.bat with errors!
+pause 
+exit 1
+
+:Wrong_Versions
+@echo check_versions.bat with errors!
+pause
+exit 4
+
+:Wrong_Start_Eclipse
+@echo start_eclipse_clean.bat with errors!
+pause
+exit 5
+
+:Start_Eclipse_Successful
+@echo Start of Eclipse was succesful!
