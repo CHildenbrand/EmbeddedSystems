@@ -51,7 +51,7 @@ extern const uint32_t __START_CRC_FLASH[];
 * Functions
 *******************************************************************************/
 
-void CtorAll_Construct(MainState *const pThis)
+void CtorAll_Construct(MainState* const pThis)
 {
 
     static DrvBlinky m_drvBlinky;
@@ -62,11 +62,11 @@ void CtorAll_Construct(MainState *const pThis)
     {
         .pHdma = &hdma_memtomem_dma1_channel1,
         .pHcrc = &hcrc,
-        .dstAddress = (uint32_t)&CRC->DR,
+        .dstAddress = (uint32_t) &CRC->DR,
         .isHardwareCrc = true,
         .crcRangeStartAddress = (const uint32_t)__START_CRC_FLASH,
         .crcRangeEndAddress = (const uint32_t)__END_CRC_FLASH,
-        .pCrcAddress = (const uint32_t *)__END_CRC_FLASH
+        .pCrcAddress = (const uint32_t*)__END_CRC_FLASH
     };
 
     DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);

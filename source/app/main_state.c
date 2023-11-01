@@ -39,7 +39,7 @@
 * Static Variables
 *******************************************************************************/
 
-static bool MainState_Cyclic_SelfTest(MainState const* pMainState, bool *pError)
+static bool MainState_Cyclic_SelfTest(MainState const* pMainState, bool* pError)
 {
     bool finished = false;
 
@@ -52,6 +52,7 @@ static bool MainState_Cyclic_SelfTest(MainState const* pMainState, bool *pError)
         {
             DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_Blinky);
         }
+
         else
         {
             DrvBlinky_SetState(pMainState->pCfg->pDrvBlinky, DrvBlinkyState_On);
@@ -79,7 +80,7 @@ static void MainState_Cyclic_Error(MainState const* pMainState)
 * Functions
 *******************************************************************************/
 
-void MainState_Construct (MainState *const pThis, MainStateConfig const* const pCfg)
+void MainState_Construct(MainState* const pThis, MainStateConfig const* const pCfg)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->constructed == false);
@@ -91,10 +92,11 @@ void MainState_Construct (MainState *const pThis, MainStateConfig const* const p
     pThis->constructed = true;
 }
 
-void MainState_Init (MainState *const pThis)
+void MainState_Init(MainState* const pThis)
 {
     volatile uint32_t wait = 100000u;
-    while(wait--) {}
+
+    while (wait--) {}
 
     assert_param(pThis != NULL);
     assert_param(pThis->initialized == false);
@@ -113,7 +115,7 @@ void MainState_Init (MainState *const pThis)
     pThis->initialized = true;
 }
 
-void MainState_Cyclic (MainState *const pThis)
+void MainState_Cyclic(MainState* const pThis)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->constructed == true);
@@ -124,22 +126,26 @@ void MainState_Cyclic (MainState *const pThis)
     if (pThis->data.state == MainState_SelfTest)
     {
         bool error = false;
+
         if (MainState_Cyclic_SelfTest(pThis, &error))
         {
             if (error == true)
             {
                 pThis->data.state = MainState_Error;
             }
+
             else
             {
                 pThis->data.state = MainState_Running;
             }
         }
     }
+
     else if (pThis->data.state == MainState_Running)
     {
         MainState_Cyclic_Running(pThis);
     }
+
     else if (pThis->data.state == MainState_Error ||
              pThis->data.state == MainState_Initial)
     {

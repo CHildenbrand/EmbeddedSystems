@@ -37,9 +37,9 @@ typedef struct
 {
     bool isHardwareCrc;
 
-    DMA_HandleTypeDef *pHdma;
+    DMA_HandleTypeDef* pHdma;
 
-    CRC_HandleTypeDef *pHcrc;
+    CRC_HandleTypeDef* pHcrc;
 
     const uint32_t crcRangeStartAddress;
 
@@ -47,7 +47,7 @@ typedef struct
 
     const uint32_t dstAddress;
 
-    const uint32_t *pCrcAddress;
+    const uint32_t* pCrcAddress;
 } DrvCrcCfg;
 
 typedef struct
@@ -79,13 +79,13 @@ typedef struct
 * Exported Functions
 *******************************************************************************/
 
-void DrvCrc_Construct(DrvCrc *const pThis, DrvCrcCfg const* const pCfg);
+void DrvCrc_Construct(DrvCrc* const pThis, DrvCrcCfg const* const pCfg);
 
-void DrvCrc_Init(DrvCrc *const pThis);
+void DrvCrc_Init(DrvCrc* const pThis);
 
-void DrvCrc_Cyclic(DrvCrc *const pThis);
+void DrvCrc_Cyclic(DrvCrc* const pThis);
 
-DrvCrcState DrvCrc_GetState (DrvCrc const* const pThis);
+DrvCrcState DrvCrc_GetState(DrvCrc const* const pThis);
 
 bool DrvCrc_IsValid(DrvCrc const* const pThis);
 
