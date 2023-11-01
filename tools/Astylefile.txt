@@ -1,0 +1,5 @@
+# https://astyle.sourceforge.net/astyle.html
+--style=allman
+-p
+-q # Quiet mode
+-n # Suppress .orig file generation

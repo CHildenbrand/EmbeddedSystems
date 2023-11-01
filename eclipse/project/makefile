@@ -27,11 +27,11 @@ $(HEX_FILE): $(ELF_FILE)
 	@echo Generating Hex-File $(notdir $@)...
 	@$(CP) -O ihex $< $@
 
-# $(PRE_PROCESS): --verbose as 3th parameter outputs the list of processed files
+# $(PRE_PROCESS): --verbose as 4th parameter outputs the list of processed files
 
 PreProcess: Directories
 	@echo Preprocessing files...
-	@$(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE)
+	@$(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE) $(ASTYLE_CFG_PATH)
 	@$(DOXYGEN) $(DOXYFILE_PATH) 2>NUL
 
 # $(POST_PROCESS): --verbose as 2nd parameter outputs value and address of crc
