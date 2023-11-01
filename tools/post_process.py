@@ -9,30 +9,31 @@ from sys import argv
 import crcmod
 from intelhex import IntelHex
 
-print("Postprocessing files... ")
-
 # parse arguments and concartinate normalized absolute path to hex file
 proj_loc_rel_path = argv[1]
 hex_file_rel_path = argv[2]
-padding = int(argv[3],16)
-   
+
+verbose = 0
+if len(argv) > 3:
+    if (argv[3] == '-v') | (argv[3] == '--verbose'):
+        verbose = 1
+        
 hex_file_in_abs_path = os.path.join(proj_loc_rel_path, hex_file_rel_path).replace("/","\\")
 
 # Read the Hex file
 hex_file = IntelHex()
 hex_file.loadhex(hex_file_in_abs_path)
+hex_file.padding = 0
+
 crc_start, crc_end = hex_file._get_start_end()
 
 if len(argv) > 4:
     hex_file_crc_addr = int(argv[4], base=16)
 else:
-    hex_file_crc_addr = crc_end-3
+    hex_file_crc_addr = crc_end - 3
 
-# Padding required
-if crc_end+1 < hex_file_crc_addr:
-    for byte_idx in range(crc_end+1, hex_file_crc_addr):
-        hex_file[byte_idx] = padding
-        
+
+
 crc_range = hex_file_crc_addr-crc_start
 
 # set the algorithm to be used for crc calculation
@@ -41,11 +42,12 @@ crc32 = crcmod.predefined.Crc('crc-32')
 # calculate the crc over application hex footprint
 crc32.update(hex_file.tobinstr(start=crc_start, size=crc_range))
 
-print("Application crc-32: " + str(hex(crc32.crcValue)))
 
 crc_hex = int(crc32.crcValue)
 
-print("CRC address: " + str(hex(hex_file_crc_addr)))
+if verbose:
+    print("Crc-32 Value: " + str(hex(crc32.crcValue)))
+    print("Crc-32 Address: " + str(hex(hex_file_crc_addr)))
 
 hex_file[hex_file_crc_addr] = crc_hex & 0xFF
 hex_file[hex_file_crc_addr+1] = (crc_hex >> 8) & 0xFF

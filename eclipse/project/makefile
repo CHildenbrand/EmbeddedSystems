@@ -27,13 +27,18 @@ $(HEX_FILE): $(ELF_FILE)
 	@echo Generating Hex-File $(notdir $@)...
 	@$(CP) -O ihex $< $@
 
+# $(PRE_PROCESS): --verbose as 3th parameter outputs the list of processed files
+
 PreProcess: Directories
 	@echo Preprocessing files...
-	@py $(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE)
+	@$(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE)
 	@$(DOXYGEN) $(DOXYFILE_PATH) 2>NUL
 
+# $(POST_PROCESS): --verbose as 2nd parameter outputs value and address of crc
+
 PostProcess: $(HEX_FILE)
-	@$(POST_PROCESS) $(PROJECT_PATH) $< 0x00
+	@echo Postprocessing files...
+	@$(POST_PROCESS) $(PROJECT_PATH) $<
 
 Directories:
 	@if not exist $(OUT_DIR) (@echo Parser: $(CC) -c $(CFLAGS) $< -o $@)

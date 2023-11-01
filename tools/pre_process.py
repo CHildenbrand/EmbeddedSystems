@@ -19,8 +19,8 @@ rel_paths = []
 for item in pattern:
     rel_paths += glob(item, root_dir=proj_root_dir, recursive=True)
 
-if verbose:
-    print("Astyle imposed on: ", rel_paths)
-
 for item in rel_paths:
     proc = subprocess.run(args=[astyle_exe_path, '--style=allman', '-q', '-n', item], cwd=proj_root_dir)
+    
+if verbose:
+    print("Formatting List: \n", rel_paths)
