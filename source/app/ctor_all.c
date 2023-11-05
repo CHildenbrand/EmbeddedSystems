@@ -22,11 +22,11 @@
 * Defines
 *******************************************************************************/
 
-//#define FLASH_CRC_START_ADDRESS 		(uint32_t)(0x8000000UL)
-//#define FLASH_CRC_END_ADDRESS    		(uint32_t)(0x8001000UL)
-
+/*! Number of LEDs configured as DrvGpio objects */
 #define NUMBER_OF_LEDS 					1u
+/*! Index representing the LD2 USER LED on base Nucleo Board */
 #define LD2_USER_LED_IDX 				0u
+/*! Number of Blinky main cycle calls to toggle LED state if blinky */
 #define BLINKY_CYCLE_MAIN_CYCLE_COUNT 	100000u
 
 /*******************************************************************************
@@ -36,8 +36,12 @@
 /*******************************************************************************
 * Global Variables
 *******************************************************************************/
-extern const uint32_t __END_CRC_FLASH[];
+
+/*! Declaration of Start Range for CRC calculation */
 extern const uint32_t __START_CRC_FLASH[];
+
+/*! Declaration of End Range for CRC calculation */
+extern const uint32_t __END_CRC_FLASH[];
 
 /*******************************************************************************
 * Static Function Prototypes

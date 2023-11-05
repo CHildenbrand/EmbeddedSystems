@@ -16,8 +16,6 @@
 * Defines
 *******************************************************************************/
 
-#define SYS_TICKS_PER_US  160u
-
 /*******************************************************************************
 * Local Types and Typedefs
 *******************************************************************************/
@@ -25,12 +23,6 @@
 /*******************************************************************************
 * Global Variables
 *******************************************************************************/
-
-uint32_t flashCrcStartTime_SysTickValue = 0UL;
-uint32_t flashCrcEndTime_SysTickValue = 0UL;
-
-uint32_t flashCrcStartTime_SysTickIrqCnt = 0u;
-uint32_t flashCrcEndTime_SysTickIrqCnt = 0u;
 
 /*******************************************************************************
 * Static Variables
@@ -44,9 +36,6 @@ static bool m_crcAvailable = false;
 
 static void DrvCrc_HandleDmaTxComplete(DMA_HandleTypeDef* pHdma)
 {
-    flashCrcEndTime_SysTickValue = SysTick->VAL / SYS_TICKS_PER_US;
-    flashCrcEndTime_SysTickIrqCnt = HAL_GetTick();
-
     m_crcAvailable = true;
 }
 
@@ -76,10 +65,6 @@ void DrvCrc_Init(DrvCrc* const pThis)
     pThis->data.state = DrvCrcState_Initial;
     pThis->data.isValid = false;
 
-    flashCrcStartTime_SysTickValue = SysTick->VAL / SYS_TICKS_PER_US;
-
-    flashCrcStartTime_SysTickIrqCnt = HAL_GetTick();
-
     if (pThis->pCfg->isHardwareCrc)
     {
         (void)HAL_DMA_RegisterCallback(pThis->pCfg->pHdma, HAL_DMA_XFER_CPLT_CB_ID, &DrvCrc_HandleDmaTxComplete);
@@ -102,9 +87,6 @@ void DrvCrc_Cyclic(DrvCrc* const pThis)
 
     if (pThis->data.state == DrvCrcState_Calculating)
     {
-        /* !!! Blocking wait for DMA complete !!! */
-        //HAL_StatusTypeDef status = HAL_DMA_PollForTransfer(pThis->pCfg->pHdma, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-
         if (m_crcAvailable == true)
         {
             /* crc-32 with XorOut=0xFFFFFFFF */

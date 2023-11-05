@@ -30,6 +30,11 @@
 * Exported Functions
 *******************************************************************************/
 
+/*!
+ * \brief Constructs the \ref MainState object
+ *
+ * \param pMainState Pointer to \ref MainState object
+ * */
 void CtorAll_Construct(MainState* const pMainState);
 
 #endif /* CTOR_ALL_H_ */
