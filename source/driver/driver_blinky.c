@@ -1,9 +1,13 @@
 /**
- * @file      blinky.c
+ * @file      driver_blinky.c
  * @author    Hildenbrand, Christian
  * @date      06.05.2023
  *
- * @brief [description]
+ * @brief This module abstracts the blinky functionality of a LED
+ *
+ * \details This module groups GPIOs dedicated to simple binary LEDs. The LED
+ * shows different illumination pattern such as constantly on / off or blinking
+ * with a period in multiply calls of DrvBlinky_MainCycle calls.
  */
 
 /*******************************************************************************
