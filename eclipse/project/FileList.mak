@@ -11,8 +11,11 @@ HEX_FILE = $(OUT_DIR)\$(TARGET).hex
 C_SOURCES =  ../../source/app/ctor_all.c \
 		../../source/driver/driver_crc.c \
 		../../source/driver/driver_blinky.c \
+		../../source/driver/driver_timer.c \
+		../../source/app/run_state.c \
 		../../source/app/main_state.c \
 		../../source/app/main.c \
+		../../source/app/wait_state.c \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c \

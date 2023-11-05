@@ -116,7 +116,7 @@ int main(void)
 
     MainState_Init(&m_mainState);
 
-    while (1)
+    while (1u)
     {
         MainState_Cyclic(&m_mainState);
     }

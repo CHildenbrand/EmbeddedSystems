@@ -17,6 +17,10 @@
 
 #include "dma.h"
 #include "crc.h"
+#include "tim.h"
+
+#include "run_state.h"
+#include "wait_state.h"
 
 /*******************************************************************************
 * Defines
@@ -51,13 +55,8 @@ extern const uint32_t __END_CRC_FLASH[];
 * Static Variables
 *******************************************************************************/
 
-/*******************************************************************************
-* Functions
-*******************************************************************************/
-
-void CtorAll_Construct(MainState* const pThis)
+static void CtorAll_RunState(RunState* const pThis)
 {
-
     static DrvBlinky m_drvBlinky;
 
     static DrvCrc m_drvCrc;
@@ -72,8 +71,6 @@ void CtorAll_Construct(MainState* const pThis)
         .crcRangeEndAddress = (const uint32_t)__END_CRC_FLASH,
         .pCrcAddress = (const uint32_t*)__END_CRC_FLASH
     };
-
-    DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);
 
     static DrvGpio m_drvGpio =
     {
@@ -90,13 +87,62 @@ void CtorAll_Construct(MainState* const pThis)
         .pDrvGpio = &m_drvGpio
     };
 
-    DrvBlinky_Construct(&m_drvBlinky, &m_drvBlinkyCfg);
-
-    static MainStateConfig m_mainStateCfg =
+    static RunStateConfig m_runStateCfg =
     {
         .pDrvBlinky =  &m_drvBlinky,
         .pDrvCrc =  &m_drvCrc,
     };
+
+    DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);
+
+    DrvBlinky_Construct(&m_drvBlinky, &m_drvBlinkyCfg);
+
+    RunState_Construct(pThis, &m_runStateCfg);
+}
+
+static void CtorAll_WaitState(WaitState* const pThis)
+{
+    static DrvTimer m_waitStateTimer;
+
+    static DrvTimerCfg m_waitStateTimerCfg =
+    {
+        .pTim = &htim1,
+
+        .type = DrvTimer_UsTimer,
+
+        .ticksPerSecond = 1000000UL,
+
+        .waitTimeInit = 0UL,
+    };
+
+    DrvTimer_Construct(&m_waitStateTimer, &m_waitStateTimerCfg);
+
+    static WaitStateCfg m_waitStateCfg =
+    {
+        .pDrvTimer = &m_waitStateTimer,
+    };
+
+    WaitState_Construct(pThis, &m_waitStateCfg);
+}
+
+/*******************************************************************************
+* Functions
+*******************************************************************************/
+
+void CtorAll_Construct(MainState* const pThis)
+{
+    static RunState m_runState;
+
+    static WaitState m_waitState;
+
+    static MainStateConfig m_mainStateCfg =
+    {
+        .pRunState = &m_runState,
+        .pWaitState = &m_waitState,
+    };
+
+    CtorAll_RunState(&m_runState);
+    CtorAll_WaitState(&m_waitState);
 
     MainState_Construct(pThis, &m_mainStateCfg);
 }

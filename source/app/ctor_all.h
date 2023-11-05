@@ -35,6 +35,6 @@
  *
  * \param pMainState Pointer to \ref MainState object
  * */
-void CtorAll_Construct(MainState* const pMainState);
+void CtorAll_Construct(MainState* const pThis);
 
 #endif /* CTOR_ALL_H_ */
