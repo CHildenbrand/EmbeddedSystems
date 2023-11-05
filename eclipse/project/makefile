@@ -32,7 +32,7 @@ $(HEX_FILE): $(ELF_FILE)
 PreBuild: Directories
 	@echo Preprocessing files...
 	@$(PRE_PROCESS) $(PROJECT_ROOT_PATH) $(ASTYLE) $(ASTYLE_CFG_PATH)
-	@$(DOXYGEN) $(DOXYFILE_PATH) 2>NUL
+	@$(DOXYGEN) $(DOXYFILE_PATH)
 
 # $(POST_PROCESS): --verbose as 2nd parameter outputs value and address of crc
 
