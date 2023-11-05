@@ -33,10 +33,10 @@ C_SOURCES =  ../../source/app/ctor_all.c \
 		../../CubeMx/Core/Src/system_stm32g4xx.c \
 		../../CubeMx/Core/Src/stm32g4xx_it.c \
 		../../CubeMx/Core/Src/stm32g4xx_hal_msp.c \
+		../../CubeMx/Core/Src/tim.c \
 		../../CubeMx/Core/Src/gpio.c \
 		../../CubeMx/Core/Src/dma.c \
 		../../CubeMx/Core/Src/crc.c
-
 
 ASM_SOURCES = ../../source/lib/startup_stm32g474xx.s
 
