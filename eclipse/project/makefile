@@ -41,7 +41,7 @@ PostBuild: $(HEX_FILE)
 	@$(POST_PROCESS) $(PROJECT_PATH) $<
 
 Directories:
-	@if not exist $(OUT_DIR) (@echo Parser: $(CC) -c $(CFLAGS) $< -o $@)
+	@if not exist $(OUT_DIR) (@echo Parser: -c $(CFLAGS) main.c -o main.o)
 	@if not exist $(OUT_DIR) mkdir $(OUT_DIR) 
 	@if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
 
