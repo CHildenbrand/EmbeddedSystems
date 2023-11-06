@@ -64,6 +64,9 @@ void MainState_Init(MainState* const pThis)
     /* Construct all modules */
     CtorAll_Construct(pThis);
 
+    RunState_Init(pThis->pCfg->pRunState);
+    WaitState_Init(pThis->pCfg->pWaitState);
+
     pThis->data.state = MainState_Run;
 
     pThis->initialized = true;

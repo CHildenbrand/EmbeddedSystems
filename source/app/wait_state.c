@@ -57,6 +57,7 @@ void WaitState_Init(WaitState* const pThis)
     DrvTimer_Init(pThis->pCfg->pDrvTimer);
 
     pThis->data.waitTimerExeeded = false;
+    pThis->data.cpuLoadPercent = 0.0f;
 
     pThis->initialized = true;
 }
@@ -70,6 +71,15 @@ void WaitState_Cyclic(WaitState* const pThis)
 
     else
     {
+        uint32_t currentTimeUs = DrvTimer_GetCurrentValue(pThis->pCfg->pDrvTimer);
+
+        uint32_t reloadValueUs = DrvTimer_GetReloadValue(pThis->pCfg->pDrvTimer);
+
+        if (reloadValueUs != 0UL)
+        {
+            pThis->data.cpuLoadPercent = (((float)currentTimeUs) * 100.0f) / ((float)reloadValueUs);
+        }
+
         while (DrvTimer_IsTimerReloaded(pThis->pCfg->pDrvTimer) == false)
         {
             /* just wait */

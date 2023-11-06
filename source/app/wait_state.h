@@ -25,7 +25,7 @@
 * Local Types and Typedefs
 *******************************************************************************/
 
-/*! Configuration of Wait SAte  */
+/*! Configuration Structure of Wait State  */
 typedef struct
 {
     /*! Pointer to \ref DrvTimer object */
@@ -39,9 +39,12 @@ typedef struct
     /*! Flag indicating that cycle time was exceeded */
     bool waitTimerExeeded;
 
+    /*! CPU Load in Percent */
+    float cpuLoadPercent;
+
 } WaitStateData;
 
-/*! Structure definition of DrvTimer object */
+/*! Structure definition of WaitState object */
 typedef struct
 {
     /*! Constuction Flag */
@@ -74,12 +77,34 @@ typedef struct
 * Functions
 *******************************************************************************/
 
+/*!
+ * \brief Constructs the \ref WaitState object
+ *
+ * \param pThis Pointer to \ref WaitState object
+ * \param pCfg Pointer to \ref WaitStateCfg
+ */
 void WaitState_Construct(WaitState* const pThis, WaitStateCfg const* const pCfg);
 
+/*!
+ * \brief Initializes the \ref WaitState object
+ *
+ * \param pThis Pointer to \ref WaitState object
+ */
 void WaitState_Init(WaitState* const pThis);
 
+/*!
+ * \brief Cyclic processing of the \ref WaitState object
+ *
+ * \param pThis Pointer to \ref WaitState object
+ */
 void WaitState_Cyclic(WaitState* const pThis);
 
+/*!
+ * \brief Gets the internal error state of the \ref WaitState object
+ *
+ * \param pThis Pointer to \ref WaitState object
+ * \return True if WaitState is in internal error; False else
+ */
 bool WaitState_IsError(WaitState* const pThis);
 
 #endif /* WAIT_STATE_H_ */

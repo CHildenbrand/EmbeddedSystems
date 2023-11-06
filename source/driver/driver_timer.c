@@ -54,9 +54,17 @@ void DrvTimer_Init(DrvTimer* const pThis)
     assert_param(pThis->constructed == true);
     assert_param(pThis->initialized == false);
 
+    DrvTimer_ClearReloaded(pThis);
+    LL_TIM_EnableCounter(pThis->pCfg->pTim->Instance);
+
     pThis->data.waitTime = pThis->pCfg->waitTimeInit;
 
     pThis->initialized = true;
+}
+
+uint32_t DrvTimer_GetReloadValue(DrvTimer const* const pThis)
+{
+    return LL_TIM_GetAutoReload(pThis->pCfg->pTim->Instance);
 }
 
 uint32_t DrvTimer_GetCurrentValue(DrvTimer* const pThis)

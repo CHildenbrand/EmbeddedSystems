@@ -31,7 +31,7 @@
 /*! Index representing the LD2 USER LED on base Nucleo Board */
 #define LD2_USER_LED_IDX 				0u
 /*! Number of Blinky main cycle calls to toggle LED state if blinky */
-#define BLINKY_CYCLE_MAIN_CYCLE_COUNT 	100000u
+#define BLINKY_CYCLE_MAIN_CYCLE_COUNT 	500UL
 
 /*******************************************************************************
 * Local Types and Typedefs

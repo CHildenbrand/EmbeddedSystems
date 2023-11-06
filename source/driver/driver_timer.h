@@ -27,6 +27,7 @@
 * Local Types and Typedefs
 *******************************************************************************/
 
+/*! Enumeration of DrvTimer Types */
 typedef enum
 {
     DrvTimer_MsTimer,
@@ -40,13 +41,16 @@ typedef enum
 /*! Configuration of Driver Timer  */
 typedef struct
 {
-    /*! Pointer to \ref TIM_HandleTypeDef object */
+    /*! Pointer to TIM_HandleTypeDef object */
     TIM_HandleTypeDef* const pTim;
 
+    /*! Driver Timer Type */
     DrvTimerType type;
 
+    /*! Value representing number of ticks for one second */
     uint32_t ticksPerSecond;
 
+    /*! Time span to wait */
     uint32_t waitTimeInit;
 } DrvTimerCfg;
 
@@ -94,18 +98,66 @@ typedef struct
 * Functions
 *******************************************************************************/
 
+/*!
+ * \brief Constructs the \ref DrvTimer object
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ * \param pCfg Pointer to \ref DrvTimerCfg Configuration
+ */
 void DrvTimer_Construct(DrvTimer* const pThis, DrvTimerCfg const* const pCfg);
 
+/*!
+ * \brief Initializes the \ref DrvTimer object
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ */
 void DrvTimer_Init(DrvTimer* const pThis);
 
+
+/*!
+ * \brief Returns the time base reload value of peripheral dedicated to \ref DrvTimer
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ * \return Reload Value of Timer peripheral
+ */
+uint32_t DrvTimer_GetReloadValue(DrvTimer const* const pThis);
+
+/*!
+ * \brief Get the current raw value of peripheral timer dedicated to \ref DrvTimer
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ * \return Raw Value of corresponding timer counter
+ */
 uint32_t DrvTimer_GetCurrentValue(DrvTimer* const pThis);
 
+/*!
+ * \brief Stores the current timer value into the \ref DrvTimer object
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ */
 void DrvTimer_SetCurrentvalue(DrvTimer* const pThis);
 
+/*!
+ * \brief Returns reload flag of the \ref DrvTimer object
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ * \return True if corresponding timer counter reloaded. False else
+ */
 bool DrvTimer_IsTimerReloaded(DrvTimer const* const pThis);
 
+/*!
+ * \brief Clears the reload flag for the \ref DrvTimer object
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ */
 void DrvTimer_ClearReloaded(DrvTimer* const pThis);
 
+/*!
+ * \brief Evaluates if time span currently exceeded of the \ref DrvTimer object
+ *
+ * \param pThis Pointer to \ref DrvTimer object
+ * \return True if timer elapsed. False else.
+ */
 bool DrvTimer_IsTimeElapsed(DrvTimer const* const pThis);
 
 #endif /* DRIVER_TIMER_H_ */

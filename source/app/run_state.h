@@ -67,7 +67,7 @@ typedef struct
     /*! Pointer to \ref RunStateConfig object */
     RunStateConfig const* pCfg;
 
-    /*! Initalization Flag */
+    /*! Initialization Flag */
     bool initialized;
 
     /*! Runtime Data */

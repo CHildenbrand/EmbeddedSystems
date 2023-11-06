@@ -40,8 +40,10 @@ typedef enum
 /*! Configuration of Main State */
 typedef struct
 {
+    /*! Pointer to \ref RunState object */
     RunState* const pRunState;
 
+    /*! Pointer to \ref WaitState object */
     WaitState* const pWaitState;
 
 } MainStateConfig;

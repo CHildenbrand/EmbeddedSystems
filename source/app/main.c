@@ -105,6 +105,10 @@ int main(void)
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
 
+    /* Stops the TIM1, TIM2 counting while debug breakpoint is hit */
+    DBGMCU->APB1FZR1 |= DBGMCU_APB1FZR1_DBG_TIM2_STOP;
+    DBGMCU->APB2FZ |= DBGMCU_APB2FZ_DBG_TIM1_STOP;
+
     /* Configure the system clock */
     SystemClock_Config();
 
