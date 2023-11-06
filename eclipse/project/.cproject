@@ -65,6 +65,9 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Build">
+			<resource resourceType="PROJECT" workspacePath="/project"/>
+		</configuration>
 		<configuration configurationName="Default">
 			<resource resourceType="PROJECT" workspacePath="/project"/>
 		</configuration>
