@@ -95,6 +95,14 @@ static void MX_TIM_Init(void)
     MX_TIM4_Init();
 
     HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
+
+    /* Encoder AB Input */
+    HAL_TIM_Encoder_MspInit(&htim20);
+
+    MX_TIM20_Init();
+
+    HAL_TIM_Encoder_Start(&htim20, TIM_CHANNEL_1);
+
 }
 
 /*******************************************************************************

@@ -14,6 +14,8 @@
 
 #include "run_state.h"
 
+#include "tim.h"
+
 /*******************************************************************************
 * Defines
 *******************************************************************************/
@@ -61,9 +63,12 @@ static bool RunState_Cyclic_SelfTest(RunState const* pRunState, bool* pError)
     return finished;
 }
 
-static void RunState_Cyclic_Running(RunState const* pRunState)
+static void RunState_Cyclic_Running(RunState* const pRunState)
 {
     DrvBlinky_Cyclic(pRunState->pCfg->pDrvBlinky);
+
+    /* Read 16 bit encoder detent raw value and convert to int16 */
+    pRunState->data.encoderAB = ((int16_t)htim20.Instance->CNT);
 }
 
 static void RunState_Cyclic_Error(RunState const* pRunState)
@@ -99,6 +104,7 @@ void RunState_Init(RunState* const pThis)
     DrvBlinky_Init(pThis->pCfg->pDrvBlinky);
 
     pThis->data.state = RunState_SelfTest;
+    pThis->data.encoderAB = 0;
 
     pThis->initialized = true;
 }
