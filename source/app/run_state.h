@@ -56,6 +56,9 @@ typedef struct
     /*! Number of RunState calls */
     uint32_t cycleCounter;
 
+    /*! Absolute encoder detents since startup */
+    int16_t encoderAB;
+
 } RunState_Data;
 
 /*! Structure definition of RunState object */
