@@ -12,12 +12,7 @@
 
 #include <stdbool.h>
 
-#include "main_state.h"
-#include "driver_blinky.h"
-#include "driver_crc.h"
-#include "stm32g4xx_hal_gpio.h"
-#include "ctor_all.h"
-#include "main.h"
+#include "run_state.h"
 
 /*******************************************************************************
 * Defines
@@ -39,11 +34,48 @@
 * Static Variables
 *******************************************************************************/
 
+static bool RunState_Cyclic_SelfTest(RunState const* pRunState, bool* pError)
+{
+    bool finished = false;
+
+    DrvCrc_Cyclic(pRunState->pCfg->pDrvCrc);
+
+    if (DrvCrc_GetState(pRunState->pCfg->pDrvCrc) == DrvCrcState_Finished)
+    {
+
+        if (DrvCrc_IsValid(pRunState->pCfg->pDrvCrc) != false)
+        {
+            DrvBlinky_SetState(pRunState->pCfg->pDrvBlinky, DrvBlinkyState_Blinky);
+        }
+
+        else
+        {
+            DrvBlinky_SetState(pRunState->pCfg->pDrvBlinky, DrvBlinkyState_On);
+        }
+
+        finished = true;
+    }
+
+    DrvBlinky_Cyclic(pRunState->pCfg->pDrvBlinky);
+
+    return finished;
+}
+
+static void RunState_Cyclic_Running(RunState const* pRunState)
+{
+    DrvBlinky_Cyclic(pRunState->pCfg->pDrvBlinky);
+}
+
+static void RunState_Cyclic_Error(RunState const* pRunState)
+{
+    assert_param(0);
+}
+
 /*******************************************************************************
 * Functions
 *******************************************************************************/
 
-void MainState_Construct(MainState* const pThis, MainStateConfig const* const pCfg)
+void RunState_Construct(RunState* const pThis, RunStateConfig const* const pCfg)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->constructed == false);
@@ -55,24 +87,23 @@ void MainState_Construct(MainState* const pThis, MainStateConfig const* const pC
     pThis->constructed = true;
 }
 
-void MainState_Init(MainState* const pThis)
+void RunState_Init(RunState* const pThis)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->initialized == false);
     assert_param(pThis->constructed == true);
 
-    /* Construct all modules */
-    CtorAll_Construct(pThis);
+    /* Initialize the modules */
+    DrvCrc_Init(pThis->pCfg->pDrvCrc);
 
-    RunState_Init(pThis->pCfg->pRunState);
-    WaitState_Init(pThis->pCfg->pWaitState);
+    DrvBlinky_Init(pThis->pCfg->pDrvBlinky);
 
-    pThis->data.state = MainState_Run;
+    pThis->data.state = RunState_SelfTest;
 
     pThis->initialized = true;
 }
 
-void MainState_Cyclic(MainState* const pThis)
+void RunState_Cyclic(RunState* const pThis)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->constructed == true);
@@ -80,31 +111,32 @@ void MainState_Cyclic(MainState* const pThis)
 
     pThis->data.cycleCounter++;
 
-    if (pThis->data.state == MainState_Run)
+    if (pThis->data.state == RunState_SelfTest)
     {
-        RunState_Cyclic(pThis->pCfg->pRunState);
+        bool error = false;
 
-        pThis->data.state = MainState_Wait;
+        if (RunState_Cyclic_SelfTest(pThis, &error))
+        {
+            if (error == true)
+            {
+                pThis->data.state = RunState_Error;
+            }
+
+            else
+            {
+                pThis->data.state = RunState_Running;
+            }
+        }
     }
 
-    else if (pThis->data.state == MainState_Wait)
+    else if (pThis->data.state == RunState_Running)
     {
-        WaitState_Cyclic(pThis->pCfg->pWaitState);
-
-        if (WaitState_IsError(pThis->pCfg->pWaitState))
-        {
-            pThis->data.state = MainState_Error;
-        }
-
-        else
-        {
-            pThis->data.state = MainState_Run;
-        }
+        RunState_Cyclic_Running(pThis);
     }
 
     else
     {
-        Error_Handler();
+        RunState_Cyclic_Error(pThis);
     }
 }
 

@@ -1,7 +1,7 @@
 /**
- * @file      main_state.c
+ * @file      wait_state.c
  * @author    Christian Hildenbrand
- * @date      01.05.2023
+ * @date      05.11.2023
  *
  * @brief [description]
  */
@@ -10,14 +10,7 @@
 * Includes
 *******************************************************************************/
 
-#include <stdbool.h>
-
-#include "main_state.h"
-#include "driver_blinky.h"
-#include "driver_crc.h"
-#include "stm32g4xx_hal_gpio.h"
-#include "ctor_all.h"
-#include "main.h"
+#include "wait_state.h"
 
 /*******************************************************************************
 * Defines
@@ -43,69 +36,61 @@
 * Functions
 *******************************************************************************/
 
-void MainState_Construct(MainState* const pThis, MainStateConfig const* const pCfg)
-{
-    assert_param(pThis != NULL);
-    assert_param(pThis->constructed == false);
-    assert_param(pCfg != NULL);
-
-    pThis->pCfg = pCfg;
-
-    pThis->initialized = false;
-    pThis->constructed = true;
-}
-
-void MainState_Init(MainState* const pThis)
+void WaitState_Construct(WaitState* const pThis, WaitStateCfg const* const pCfg)
 {
     assert_param(pThis != NULL);
     assert_param(pThis->initialized == false);
+    assert_param(pThis->constructed == false);
+
+    pThis->pCfg = pCfg;
+
+    pThis->constructed = true;
+    pThis->initialized = false;
+}
+
+void WaitState_Init(WaitState* const pThis)
+{
+    assert_param(pThis != NULL);
     assert_param(pThis->constructed == true);
+    assert_param(pThis->initialized == false);
 
-    /* Construct all modules */
-    CtorAll_Construct(pThis);
+    DrvTimer_Init(pThis->pCfg->pDrvTimer);
 
-    RunState_Init(pThis->pCfg->pRunState);
-    WaitState_Init(pThis->pCfg->pWaitState);
-
-    pThis->data.state = MainState_Run;
+    pThis->data.waitTimerExeeded = false;
+    pThis->data.cpuLoadPercent = 0.0f;
 
     pThis->initialized = true;
 }
 
-void MainState_Cyclic(MainState* const pThis)
+void WaitState_Cyclic(WaitState* const pThis)
 {
-    assert_param(pThis != NULL);
-    assert_param(pThis->constructed == true);
-    assert_param(pThis->initialized == true);
-
-    pThis->data.cycleCounter++;
-
-    if (pThis->data.state == MainState_Run)
+    if (DrvTimer_IsTimerReloaded(pThis->pCfg->pDrvTimer))
     {
-        RunState_Cyclic(pThis->pCfg->pRunState);
-
-        pThis->data.state = MainState_Wait;
-    }
-
-    else if (pThis->data.state == MainState_Wait)
-    {
-        WaitState_Cyclic(pThis->pCfg->pWaitState);
-
-        if (WaitState_IsError(pThis->pCfg->pWaitState))
-        {
-            pThis->data.state = MainState_Error;
-        }
-
-        else
-        {
-            pThis->data.state = MainState_Run;
-        }
+        pThis->data.waitTimerExeeded = true;
     }
 
     else
     {
-        Error_Handler();
+        uint32_t currentTimeUs = DrvTimer_GetCurrentValue(pThis->pCfg->pDrvTimer);
+
+        uint32_t reloadValueUs = DrvTimer_GetReloadValue(pThis->pCfg->pDrvTimer);
+
+        if (reloadValueUs != 0UL)
+        {
+            pThis->data.cpuLoadPercent = (((float)currentTimeUs) * 100.0f) / ((float)reloadValueUs);
+        }
+
+        while (DrvTimer_IsTimerReloaded(pThis->pCfg->pDrvTimer) == false)
+        {
+            /* just wait */
+        }
+
+        DrvTimer_ClearReloaded(pThis->pCfg->pDrvTimer);
     }
 }
 
+bool WaitState_IsError(WaitState* const pThis)
+{
+    return pThis->data.waitTimerExeeded;
+}
 

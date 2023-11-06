@@ -11,53 +11,35 @@
 #include "stm32g4xx_hal.h"
 #include "gpio.h"
 #include "dma.h"
+#include "tim.h"
 #include "crc.h"
 
 #include "main_state.h"
 
-/* Private defines  ----------------------------------------------------------*/
+/*******************************************************************************
+* Defines
+*******************************************************************************/
 
-/* Private enumerations-------------------------------------------------------*/
+/*******************************************************************************
+* Local Types and Typedefs
+*******************************************************************************/
 
-/* Private variables ---------------------------------------------------------*/
+/*******************************************************************************
+* Global Variables
+*******************************************************************************/
 
-static MainState m_mainState;
-/* Private functions ---------------------------------------------------------*/
+/*******************************************************************************
+* Static Variables
+*******************************************************************************/
 
-void SystemClock_Config(void);
-
-
-/* Private user code ---------------------------------------------------------*/
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
-int main(void)
-{
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
-
-    /* Configure the system clock */
-    SystemClock_Config();
-
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_CRC_Init();
-    MX_DMA_Init();
-
-    MainState_Init(&m_mainState);
-
-    while (1)
-    {
-        MainState_Cyclic(&m_mainState);
-    }
-}
+/*******************************************************************************
+* Static Function Prototypes
+*******************************************************************************/
 
 /**
   * \brief System Clock Configuration
   */
-void SystemClock_Config(void)
+static void SystemClock_Config(void)
 {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -96,32 +78,75 @@ void SystemClock_Config(void)
     }
 }
 
+/*!
+ * \brief Initializes all timer in use
+ */
+static void MX_TIM_Init(void)
+{
+    /* Main State Timer to obtain strictly cyclic calls */
+    MX_TIM1_Init();
+
+    /* Measurement Timer Source to obtain 32-bit width micro-seconds timer */
+    MX_TIM2_Init();
+}
+
+/*******************************************************************************
+* Public Functions
+*******************************************************************************/
+
+/**
+  * @brief  Jump entry from __main of compiler
+  * @retval int
+  */
+int main(void)
+{
+    static MainState m_mainState;
+
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
+
+    /* Stops the TIM1, TIM2 counting while debug breakpoint is hit */
+    DBGMCU->APB1FZR1 |= DBGMCU_APB1FZR1_DBG_TIM2_STOP;
+    DBGMCU->APB2FZ |= DBGMCU_APB2FZ_DBG_TIM1_STOP;
+
+    /* Configure the system clock */
+    SystemClock_Config();
+
+    /* Initialize all configured peripherals */
+    MX_GPIO_Init();
+    MX_CRC_Init();
+    MX_DMA_Init();
+    MX_TIM_Init();
+
+    MainState_Init(&m_mainState);
+
+    while (1u)
+    {
+        MainState_Cyclic(&m_mainState);
+    }
+
+    return 0;
+}
+
+
+
 /**
   * \brief  This function is executed in case of error occurrence.
   */
 void Error_Handler(void)
 {
-    /* USER CODE BEGIN Error_Handler_Debug */
-    /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
 
     while (1)
     {
     }
-
-    /* USER CODE END Error_Handler_Debug */
 }
 
-/* USER CODE BEGIN EXTI15_10_IRQHandler */
 /**
   * @brief This function handles EXTI line[15:10] interrupts.
   */
 void EXTI15_10_IRQHandler(void)
 {
-    /* Hacker style - one purpose */
-    //HAL_GPIO_EXTI_IRQHandler(B1_USER_BUTTON_INT_Pin);
-
-    /* More generic style */
     uint16_t gpioPin = (uint16_t)__HAL_GPIO_EXTI_GET_FLAG(GPIO_PIN_All);
 
     if (gpioPin)
@@ -129,7 +154,6 @@ void EXTI15_10_IRQHandler(void)
         HAL_GPIO_EXTI_IRQHandler(gpioPin);
     }
 }
-/* USER CODE END EXTI15_10_IRQHandler 1 */
 
 #ifdef  USE_FULL_ASSERT
 /**

@@ -1,21 +1,21 @@
 /**
- * @file      main_state.h
+ * @file      run_state.h
  * @author    Christian Hildenbrand
  * @date      01.05.2023
  *
  * @brief Header File for Main State Module
  */
 
-#ifndef MAIN_STATE_H_
-#define MAIN_STATE_H_
+#ifndef RUN_STATE_H_
+#define RUN_STATE_H_
 
 /*******************************************************************************
 * Includes
 *******************************************************************************/
 #include <stdbool.h>
 
-#include "run_state.h"
-#include "wait_state.h"
+#include "driver_blinky.h"
+#include "driver_crc.h"
 
 /*******************************************************************************
 * Exported Defines
@@ -28,52 +28,52 @@
 /*! Enumeration of Main State Values */
 typedef enum
 {
-    MainState_Initial,
+    RunState_Initial,
 
-    MainState_Run,
+    RunState_SelfTest,
 
-    MainState_Wait,
+    RunState_Running,
 
-    MainState_Error,
-} MainState_State;
+    RunState_Error,
+} RunState_State;
 
 /*! Configuration of Main State */
 typedef struct
 {
-    /*! Pointer to \ref RunState object */
-    RunState* const pRunState;
+    /*! Pointer to \ref DrvBlinky object */
+    DrvBlinky* const pDrvBlinky;
 
-    /*! Pointer to \ref WaitState object */
-    WaitState* const pWaitState;
-
-} MainStateConfig;
+    /*! Pointer to \ref DrvCrc object */
+    DrvCrc* const pDrvCrc;
+} RunStateConfig;
 
 /*! Runtime Data of Main State object */
 typedef struct
 {
     /*! Current State of Main State machine */
-    MainState_State state;
+    RunState_State state;
 
-    /*! Number of MainState calls */
+    /*! Number of RunState calls */
     uint32_t cycleCounter;
-} MainState_Data;
 
-/*! Structure definition of MainState object */
+} RunState_Data;
+
+/*! Structure definition of RunState object */
 typedef struct
 {
     /*! Constuction Flag */
     bool constructed;
 
-    /*! Pointer to \ref MainStateConfig object */
-    MainStateConfig const* pCfg;
+    /*! Pointer to \ref RunStateConfig object */
+    RunStateConfig const* pCfg;
 
-    /*! Initalization Flag */
+    /*! Initialization Flag */
     bool initialized;
 
     /*! Runtime Data */
-    MainState_Data data;
+    RunState_Data data;
 
-} MainState;
+} RunState;
 
 /*******************************************************************************
 * Global Variables
@@ -84,25 +84,25 @@ typedef struct
 *******************************************************************************/
 
 /*!
- * \brief Function constructs the \ref MainState object
+ * \brief Function constructs the \ref RunState object
  *
- * \param pThis Pointer to \ref MainState
- * \param pCfg Pointer to \ref MainStateConfig
+ * \param pThis Pointer to \ref RunState
+ * \param pCfg Pointer to \ref RunStateConfig
  */
-void MainState_Construct(MainState* const pThis, MainStateConfig const* const pCfg);
+void RunState_Construct(RunState* const pThis, RunStateConfig const* const pCfg);
 
 /*!
- * \brief Function initializes the \ref MainState object
+ * \brief Function initalizes the \ref RunState object
  *
- * \param pThis Pointer to \ref MainState
+ * \param pThis Pointer to \ref RunState
  */
-void MainState_Init(MainState* const pThis);
+void RunState_Init(RunState* const pThis);
 
 /*!
- * \brief Cyclic processing of the \ref MainState object
+ * \brief Cyclic processing of the \ref RunState object
  *
- * \param pThis Pointer to \ref MainState
+ * \param pThis Pointer to \ref RunState
  */
-void MainState_Cyclic(MainState* const pThis);
+void RunState_Cyclic(RunState* const pThis);
 
-#endif /* MAIN_STATE_H_ */
+#endif /* RUN_STATE_H_ */
