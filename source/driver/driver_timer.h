@@ -34,7 +34,9 @@ typedef enum
 
     DrvTimer_UsTimer,
 
-    DrvTimer_TickTimer
+    DrvTimer_TickTimer,
+
+    DrvTimer_EncoderAB,
 
 } DrvTimerType;
 

@@ -61,6 +61,8 @@ static void CtorAll_RunState(RunState* const pThis)
 
     static DrvCrc m_drvCrc;
 
+    static DrvTimer m_drvTimer;
+
     static DrvCrcCfg m_drvCrcCfg =
     {
         .pHdma = &hdma_memtomem_dma1_channel1,
@@ -70,6 +72,14 @@ static void CtorAll_RunState(RunState* const pThis)
         .crcRangeStartAddress = (const uint32_t)__START_CRC_FLASH,
         .crcRangeEndAddress = (const uint32_t)__END_CRC_FLASH,
         .pCrcAddress = (const uint32_t*)__END_CRC_FLASH
+    };
+
+    static DrvTimerCfg m_drvTimerCfg =
+    {
+        .pTim = &htim20,
+        .type = DrvTimer_EncoderAB,
+        .ticksPerSecond = 0UL,
+        .waitTimeInit = 0UL,
     };
 
     static DrvGpio m_drvGpio =
@@ -91,7 +101,10 @@ static void CtorAll_RunState(RunState* const pThis)
     {
         .pDrvBlinky =  &m_drvBlinky,
         .pDrvCrc =  &m_drvCrc,
+        .pEncoderAB = &m_drvTimer,
     };
+
+    DrvTimer_Construct(&m_drvTimer, &m_drvTimerCfg);
 
     DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);
 

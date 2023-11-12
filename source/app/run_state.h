@@ -16,6 +16,7 @@
 
 #include "driver_blinky.h"
 #include "driver_crc.h"
+#include "driver_timer.h"
 
 /*******************************************************************************
 * Exported Defines
@@ -45,6 +46,9 @@ typedef struct
 
     /*! Pointer to \ref DrvCrc object */
     DrvCrc* const pDrvCrc;
+
+    /*! Pointer to \ref DrvTimer object */
+    DrvTimer* const pEncoderAB;
 } RunStateConfig;
 
 /*! Runtime Data of Main State object */
@@ -57,7 +61,7 @@ typedef struct
     uint32_t cycleCounter;
 
     /*! Absolute encoder detents since startup */
-    int16_t encoderAB;
+    uint16_t encoderAB;
 
 } RunState_Data;
 

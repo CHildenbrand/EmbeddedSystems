@@ -89,7 +89,7 @@ static void MX_TIM_Init(void)
     /* TIM2: Measurement Timer Source to obtain 32-bit width micro-seconds timer */
     MX_TIM2_Init();
 
-    /* TIM3: RGB LED - CH1 Red, CH3 Blue,  CH4 Green - Output Compare drives PWM */
+    /* TIM3: RGB LED - CH1 Green, CH3 Blue, CH4 Blue - Output Compare drives PWM */
     HAL_TIM_PWM_MspInit(&htim3);
 
     MX_TIM3_Init();
