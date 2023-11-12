@@ -13,6 +13,7 @@
 #include "dma.h"
 #include "tim.h"
 #include "crc.h"
+#include "adc.h"
 
 #include "main_state.h"
 
@@ -118,7 +119,17 @@ static void MX_TIM_Init(void)
     MX_TIM20_Init();
 
     HAL_TIM_Encoder_Start(&htim20, TIM_CHANNEL_1);
+}
 
+static void MX_ADC_Init(void)
+{
+    HAL_ADC_MspInit(&hadc3);
+
+    MX_ADC3_Init();
+
+    HAL_ADC_MspInit(&hadc4);
+
+    MX_ADC4_Init();
 }
 
 /*******************************************************************************
@@ -148,6 +159,7 @@ int main(void)
     MX_CRC_Init();
     MX_DMA_Init();
     MX_TIM_Init();
+    MX_ADC_Init();
 
     MainState_Init(&m_mainState);
 
