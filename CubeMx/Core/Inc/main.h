@@ -69,6 +69,10 @@ void Error_Handler(void);
 #define ENC_QD_YELLOW_GPIO_Port GPIOB
 #define LED_D1_Pin GPIO_PIN_10
 #define LED_D1_GPIO_Port GPIOB
+#define JOYSTICK_Y_Pin GPIO_PIN_12
+#define JOYSTICK_Y_GPIO_Port GPIOB
+#define JOYSTICK_X_Pin GPIO_PIN_13
+#define JOYSTICK_X_GPIO_Port GPIOB
 #define SERVO_PWM_Pin GPIO_PIN_14
 #define SERVO_PWM_GPIO_Port GPIOB
 #define RGB_LED_G_Pin GPIO_PIN_6
