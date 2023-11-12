@@ -67,8 +67,8 @@ static void RunState_Cyclic_Running(RunState* const pRunState)
 {
     DrvBlinky_Cyclic(pRunState->pCfg->pDrvBlinky);
 
-    /* Read 16 bit encoder detent raw value and convert to int16 */
-    pRunState->data.encoderAB = ((int16_t)htim20.Instance->CNT);
+    /* Read the encoder driven counter value */
+    pRunState->data.encoderAB = DrvTimer_GetCurrentValue(pRunState->pCfg->pEncoderAB);
 }
 
 static void RunState_Cyclic_Error(RunState const* pRunState)
@@ -103,8 +103,10 @@ void RunState_Init(RunState* const pThis)
 
     DrvBlinky_Init(pThis->pCfg->pDrvBlinky);
 
+    DrvTimer_Init(pThis->pCfg->pEncoderAB);
+
     pThis->data.state = RunState_SelfTest;
-    pThis->data.encoderAB = 0;
+    pThis->data.encoderAB = 0u;
 
     pThis->initialized = true;
 }
