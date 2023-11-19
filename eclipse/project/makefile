@@ -41,7 +41,7 @@ PostBuild: $(HEX_FILE)
 	@$(POST_PROCESS) $(PROJECT_PATH) $<
 
 Directories:
-	@if not exist $(OUT_DIR) (@echo $(CC) $(CFLAGS)  -c main.c -o main.o)
+	@if not exist $(OUT_DIR) (@echo arm-none-eabi-gcc $(CFLAGS) -c main.c -o main.o)
 	@if not exist $(OUT_DIR) mkdir $(OUT_DIR) 
 	@if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
 
