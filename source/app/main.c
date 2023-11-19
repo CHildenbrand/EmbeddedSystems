@@ -89,47 +89,11 @@ static void MX_TIM_Init(void)
 
     /* TIM2: Measurement Timer Source to obtain 32-bit width micro-seconds timer */
     MX_TIM2_Init();
-
-    /* TIM3: RGB LED - CH1 Green, CH3 Blue, CH4 Blue - Output Compare drives PWM */
-    HAL_TIM_PWM_MspInit(&htim3);
-
-    MX_TIM3_Init();
-
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-
-    /* TIM4: PWM Output to LED D4 */
-    HAL_TIM_PWM_MspInit(&htim4);
-
-    MX_TIM4_Init();
-
-    HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
-
-    /* TIM15: Servo Signal line is connected to TIM_CHANNEL_1 */
-    HAL_TIM_PWM_MspInit(&htim15);
-
-    MX_TIM15_Init();
-
-    HAL_TIM_PWM_Start(&htim15, TIM_CHANNEL_1);
-
-    /* Encoder AB Input */
-    HAL_TIM_Encoder_MspInit(&htim20);
-
-    MX_TIM20_Init();
-
-    HAL_TIM_Encoder_Start(&htim20, TIM_CHANNEL_1);
 }
 
 static void MX_ADC_Init(void)
 {
-    HAL_ADC_MspInit(&hadc3);
 
-    MX_ADC3_Init();
-
-    HAL_ADC_MspInit(&hadc4);
-
-    MX_ADC4_Init();
 }
 
 /*******************************************************************************

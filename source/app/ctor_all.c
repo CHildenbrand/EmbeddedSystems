@@ -57,11 +57,7 @@ extern const uint32_t __END_CRC_FLASH[];
 
 static void CtorAll_RunState(RunState* const pThis)
 {
-    static DrvBlinky m_drvBlinky;
-
     static DrvCrc m_drvCrc;
-
-    static DrvTimer m_drvTimer;
 
     static DrvCrcCfg m_drvCrcCfg =
     {
@@ -74,41 +70,12 @@ static void CtorAll_RunState(RunState* const pThis)
         .pCrcAddress = (const uint32_t*)__END_CRC_FLASH
     };
 
-    static DrvTimerCfg m_drvTimerCfg =
-    {
-        .pTim = &htim20,
-        .type = DrvTimer_EncoderAB,
-        .ticksPerSecond = 0UL,
-        .waitTimeInit = 0UL,
-    };
-
-    static DrvGpio m_drvGpio =
-    {
-        .ledPort = LD2_USER_GPIO_Port,
-        .ledPin = LD2_USER_Pin,
-        .initValue = GPIO_PIN_RESET,
-        .currentValue = GPIO_PIN_RESET
-    };
-
-    static DrvBlinkyCfg m_drvBlinkyCfg =
-    {
-        .numberOfLeds = NUMBER_OF_LEDS,
-        .blinkyCycleTotal = BLINKY_CYCLE_MAIN_CYCLE_COUNT,
-        .pDrvGpio = &m_drvGpio
-    };
-
     static RunStateConfig m_runStateCfg =
     {
-        .pDrvBlinky =  &m_drvBlinky,
         .pDrvCrc =  &m_drvCrc,
-        .pEncoderAB = &m_drvTimer,
     };
 
-    DrvTimer_Construct(&m_drvTimer, &m_drvTimerCfg);
-
     DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);
-
-    DrvBlinky_Construct(&m_drvBlinky, &m_drvBlinkyCfg);
 
     RunState_Construct(pThis, &m_runStateCfg);
 }

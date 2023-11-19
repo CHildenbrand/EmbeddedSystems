@@ -59,37 +59,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define B1_USER_BUTTON_Pin GPIO_PIN_13
 #define B1_USER_BUTTON_GPIO_Port GPIOC
-#define ENC_QD_ORANGE_Pin GPIO_PIN_2
-#define ENC_QD_ORANGE_GPIO_Port GPIOC
-#define LD2_USER_Pin GPIO_PIN_5
-#define LD2_USER_GPIO_Port GPIOA
-#define RGB_LED_R_Pin GPIO_PIN_1
-#define RGB_LED_R_GPIO_Port GPIOB
-#define ENC_QD_YELLOW_Pin GPIO_PIN_2
-#define ENC_QD_YELLOW_GPIO_Port GPIOB
-#define LED_D1_Pin GPIO_PIN_10
-#define LED_D1_GPIO_Port GPIOB
-#define JOYSTICK_Y_Pin GPIO_PIN_12
-#define JOYSTICK_Y_GPIO_Port GPIOB
-#define JOYSTICK_X_Pin GPIO_PIN_13
-#define JOYSTICK_X_GPIO_Port GPIOB
-#define SERVO_PWM_Pin GPIO_PIN_14
-#define SERVO_PWM_GPIO_Port GPIOB
-#define RGB_LED_G_Pin GPIO_PIN_6
-#define RGB_LED_G_GPIO_Port GPIOC
-#define LED_D2_Pin GPIO_PIN_7
-#define LED_D2_GPIO_Port GPIOC
-#define RGB_LED_B_Pin GPIO_PIN_8
-#define RGB_LED_B_GPIO_Port GPIOC
-#define SW_1_EXTI3_Pin GPIO_PIN_3
-#define SW_1_EXTI3_GPIO_Port GPIOB
-#define SW_1_EXTI3_EXTI_IRQn EXTI3_IRQn
-#define LED_D0_Pin GPIO_PIN_5
-#define LED_D0_GPIO_Port GPIOB
-#define LD4_PWM_Pin GPIO_PIN_8
-#define LD4_PWM_GPIO_Port GPIOB
-#define LED_D3_Pin GPIO_PIN_9
-#define LED_D3_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

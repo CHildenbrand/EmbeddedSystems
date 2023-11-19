@@ -55,54 +55,22 @@ static bool RunState_Cyclic_SelfTest(RunState const* pRunState, bool* pError)
 
         if (DrvCrc_IsValid(pRunState->pCfg->pDrvCrc) != false)
         {
-            DrvBlinky_SetState(pRunState->pCfg->pDrvBlinky, DrvBlinkyState_Blinky);
+            /* Nothing to do */
         }
-
         else
         {
-            DrvBlinky_SetState(pRunState->pCfg->pDrvBlinky, DrvBlinkyState_On);
+            /* Nothing to do */
         }
 
         finished = true;
     }
-
-    DrvBlinky_Cyclic(pRunState->pCfg->pDrvBlinky);
 
     return finished;
 }
 
 static void RunState_Cyclic_Running(RunState* const pRunState)
 {
-    DrvBlinky_Cyclic(pRunState->pCfg->pDrvBlinky);
 
-    /* Read the encoder driven counter value */
-    pRunState->data.encoderAB = DrvTimer_GetCurrentValue(pRunState->pCfg->pEncoderAB);
-
-    /* Read the latest converted ADC raw values for each axis*/
-    uint32_t joystickX_Raw = HAL_ADC_GetValue(&hadc3);
-    uint32_t joystickY_Raw = HAL_ADC_GetValue(&hadc4);
-
-    /* Convert the adc values in ranges from 0 to 100 */
-    uint32_t joystickX = (joystickX_Raw * VALUE_TO_PERCENT) / UINT12_MAX_VALUE;
-    uint32_t joystickY = (joystickY_Raw * VALUE_TO_PERCENT) / UINT12_MAX_VALUE;
-
-    /* Update the LED D4 PWM on EduShield by x-axis of joystick */
-    /* Convert the range of x-axis to PWM length in digits */
-    uint32_t pwmMaxValue = LL_TIM_GetAutoReload(htim4.Instance);
-    uint32_t pwmNormalized = (joystickX * pwmMaxValue) / VALUE_TO_PERCENT;
-
-    /* Write to Output compare value to define PWM for channel 3 */
-    LL_TIM_OC_SetCompareCH3(htim4.Instance, pwmNormalized);
-
-    /* Update the separate RGB LED board by y-axis of joystick */
-    /* Convert the range of y-axis to PWM length in digits */
-    pwmMaxValue = LL_TIM_GetAutoReload(htim3.Instance);
-    pwmNormalized = (joystickY * pwmMaxValue) / VALUE_TO_PERCENT;
-
-    /* Update all three RGB channels linearly to obtain always a white light*/
-    LL_TIM_OC_SetCompareCH1(htim3.Instance, pwmNormalized);
-    LL_TIM_OC_SetCompareCH3(htim3.Instance, pwmNormalized);
-    LL_TIM_OC_SetCompareCH4(htim3.Instance, pwmNormalized);
 }
 
 static void RunState_Cyclic_Error(RunState const* pRunState)
@@ -135,18 +103,7 @@ void RunState_Init(RunState* const pThis)
     /* Initialize the modules */
     DrvCrc_Init(pThis->pCfg->pDrvCrc);
 
-    DrvBlinky_Init(pThis->pCfg->pDrvBlinky);
-
-    DrvTimer_Init(pThis->pCfg->pEncoderAB);
-
     pThis->data.state = RunState_SelfTest;
-    pThis->data.encoderAB = 0u;
-
-    ADC_Enable(&hadc3);
-    ADC_Enable(&hadc4);
-
-    HAL_ADC_Start(&hadc3);
-    HAL_ADC_Start(&hadc4);
 
     pThis->initialized = true;
 }

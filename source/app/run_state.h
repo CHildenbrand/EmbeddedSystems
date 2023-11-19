@@ -41,14 +41,9 @@ typedef enum
 /*! Configuration of Main State */
 typedef struct
 {
-    /*! Pointer to \ref DrvBlinky object */
-    DrvBlinky* const pDrvBlinky;
-
     /*! Pointer to \ref DrvCrc object */
     DrvCrc* const pDrvCrc;
 
-    /*! Pointer to \ref DrvTimer object */
-    DrvTimer* const pEncoderAB;
 } RunStateConfig;
 
 /*! Runtime Data of Main State object */
@@ -59,9 +54,6 @@ typedef struct
 
     /*! Number of RunState calls */
     uint32_t cycleCounter;
-
-    /*! Absolute encoder detents since startup */
-    uint16_t encoderAB;
 
 } RunState_Data;
 
