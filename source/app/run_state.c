@@ -18,6 +18,7 @@
 #include "adc.h"
 #include "stm32g4xx_ll_tim.h"
 
+#include "math.h"
 /*******************************************************************************
 * Defines
 *******************************************************************************/
@@ -35,6 +36,9 @@
 /*******************************************************************************
 * Global Variables
 *******************************************************************************/
+
+static bool summerOn = false;
+static uint32_t maxTimerCounterOld = 0U;
 
 /*******************************************************************************
 * Static Function Prototypes
@@ -78,31 +82,71 @@ static void RunState_Cyclic_Running(RunState* const pRunState)
     /* Read the encoder driven counter value */
     pRunState->data.encoderAB = DrvTimer_GetCurrentValue(pRunState->pCfg->pEncoderAB);
 
+    int16_t signedEncoderValue = 0;
+
+    if (pRunState->data.encoderAB > 0x7FFFU)
+    {
+        signedEncoderValue = 0xFFFFUL - pRunState->data.encoderAB + 1U;
+        signedEncoderValue = -signedEncoderValue;
+    }
+
+    else
+    {
+        signedEncoderValue = pRunState->data.encoderAB;
+    }
+
+    /* ceil or floor to remain in frequency boundary */
+    if (signedEncoderValue > 12)
+    {
+        signedEncoderValue = 12;
+    }
+
+    else if (signedEncoderValue < -21)
+    {
+        signedEncoderValue = -21;
+    }
+
+    /* calculate commanded frequency base on half-tone steps */
+    float base = 2.0f;
+    float exponent = (((float)signedEncoderValue) / 12.0f);
+
+    float frequency = 440.0f * powf(base, exponent);
+
+    /* calculate the time span = 1 / frequency in us */
+    uint32_t maxTimerCounter = (uint32_t)(1000000.0f / frequency);
+
+
+    if (summerOn)
+    {
+        if (maxTimerCounter != maxTimerCounterOld)
+        {
+            LL_TIM_SetAutoReload(htim15.Instance, maxTimerCounter);
+            LL_TIM_OC_SetCompareCH1(htim15.Instance, maxTimerCounter / 100u);
+        }
+    }
+
+    else
+    {
+        LL_TIM_SetAutoReload(htim15.Instance, 0);
+    }
+
+    maxTimerCounterOld = maxTimerCounter;
+
+
     /* Read the latest converted ADC raw values for each axis*/
-    uint32_t joystickX_Raw = HAL_ADC_GetValue(&hadc3);
-    uint32_t joystickY_Raw = HAL_ADC_GetValue(&hadc4);
+    // uint32_t joystickX_Raw = HAL_ADC_GetValue(&hadc3);
+    //uint32_t joystickY_Raw = HAL_ADC_GetValue(&hadc4);
 
-    /* Convert the adc values in ranges from 0 to 100 */
-    uint32_t joystickX = (joystickX_Raw * VALUE_TO_PERCENT) / UINT12_MAX_VALUE;
-    uint32_t joystickY = (joystickY_Raw * VALUE_TO_PERCENT) / UINT12_MAX_VALUE;
-
-    /* Update the LED D4 PWM on EduShield by x-axis of joystick */
-    /* Convert the range of x-axis to PWM length in digits */
-    uint32_t pwmMaxValue = LL_TIM_GetAutoReload(htim4.Instance);
-    uint32_t pwmNormalized = (joystickX * pwmMaxValue) / VALUE_TO_PERCENT;
-
-    /* Write to Output compare value to define PWM for channel 3 */
-    LL_TIM_OC_SetCompareCH3(htim4.Instance, pwmNormalized);
+    //LL_TIM_OC_SetCompareCH3(htim4.Instance, pwmNormalized);
 
     /* Update the separate RGB LED board by y-axis of joystick */
     /* Convert the range of y-axis to PWM length in digits */
-    pwmMaxValue = LL_TIM_GetAutoReload(htim3.Instance);
-    pwmNormalized = (joystickY * pwmMaxValue) / VALUE_TO_PERCENT;
+    //pwmMaxValue = LL_TIM_GetAutoReload(htim3.Instance);
 
     /* Update all three RGB channels linearly to obtain always a white light*/
-    LL_TIM_OC_SetCompareCH1(htim3.Instance, pwmNormalized);
-    LL_TIM_OC_SetCompareCH3(htim3.Instance, pwmNormalized);
-    LL_TIM_OC_SetCompareCH4(htim3.Instance, pwmNormalized);
+    //LL_TIM_OC_SetCompareCH1(htim3.Instance, pwmNormalized);
+    //LL_TIM_OC_SetCompareCH3(htim3.Instance, pwmNormalized);
+    //LL_TIM_OC_SetCompareCH4(htim3.Instance, pwmNormalized);
 }
 
 static void RunState_Cyclic_Error(RunState const* pRunState)
@@ -113,6 +157,22 @@ static void RunState_Cyclic_Error(RunState const* pRunState)
 /*******************************************************************************
 * Functions
 *******************************************************************************/
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == GPIO_PIN_13)
+    {
+        summerOn = !summerOn;
+
+        if (summerOn)
+        {
+            maxTimerCounterOld = 0UL;
+
+            LL_TIM_SetCounter(htim20.Instance, 0UL);
+        }
+    }
+}
+
 
 void RunState_Construct(RunState* const pThis, RunStateConfig const* const pCfg)
 {

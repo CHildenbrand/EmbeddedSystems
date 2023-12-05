@@ -185,19 +185,6 @@ void Error_Handler(void)
     }
 }
 
-/**
-  * @brief This function handles EXTI line[15:10] interrupts.
-  */
-void EXTI15_10_IRQHandler(void)
-{
-    uint16_t gpioPin = (uint16_t)__HAL_GPIO_EXTI_GET_FLAG(GPIO_PIN_All);
-
-    if (gpioPin)
-    {
-        HAL_GPIO_EXTI_IRQHandler(gpioPin);
-    }
-}
-
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number

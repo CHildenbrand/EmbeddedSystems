@@ -201,35 +201,6 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles EXTI line3 interrupt.
-  */
-void EXTI3_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI3_IRQn 0 */
-
-  /* USER CODE END EXTI3_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(SW_1_EXTI3_Pin);
-  /* USER CODE BEGIN EXTI3_IRQn 1 */
-
-  HAL_TIM_PWM_Stop(&htim15, TIM_CHANNEL_1);
-
-  static uint32_t pwmRaw = 150u;
-  pwmRaw+=10;
-
-  if (pwmRaw > 210L)
-  {
-	  pwmRaw = 90UL;
-  }
-
-  LL_TIM_OC_SetCompareCH1(htim15.Instance, pwmRaw);
-
-  HAL_TIM_PWM_Start(&htim15, TIM_CHANNEL_1);
-
-
-  /* USER CODE END EXTI3_IRQn 1 */
-}
-
-/**
   * @brief This function handles DMA1 channel1 global interrupt.
   */
 void DMA1_Channel1_IRQHandler(void)
@@ -241,6 +212,20 @@ void DMA1_Channel1_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
 
   /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI15_10_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
+
+  /* USER CODE END EXTI15_10_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
+
+  /* USER CODE END EXTI15_10_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
