@@ -22,7 +22,7 @@
 #include "dma.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "stm32g4xx_hal_dma_ex.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -38,6 +38,7 @@ DMA_HandleTypeDef hdma_memtomem_dma1_channel1;
   * Enable DMA controller clock
   * Configure DMA for memory to memory transfers
   *   hdma_memtomem_dma1_channel1
+  *   hdma_memtomem_dma2_channel1
   */
 void MX_DMA_Init(void)
 {
@@ -45,6 +46,7 @@ void MX_DMA_Init(void)
   /* DMA controller clock enable */
   __HAL_RCC_DMAMUX1_CLK_ENABLE();
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* Configure DMA request hdma_memtomem_dma1_channel1 on DMA1_Channel1 */
   hdma_memtomem_dma1_channel1.Instance = DMA1_Channel1;
@@ -61,6 +63,7 @@ void MX_DMA_Init(void)
     Error_Handler();
   }
 
+
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
@@ -69,6 +72,34 @@ void MX_DMA_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+
+DMA_HandleTypeDef hdma2;
+void MX_DMA2_Init(void)
+{
+	/* Configure DMA request hdma_memtomem_dma2_channel1 on DMA2_Channel1 */
+	hdma2.Instance = DMA2_Channel1;
+	hdma2.Init.Request = DMA_REQUEST_MEM2MEM;
+	hdma2.Init.Direction = DMA_PERIPH_TO_MEMORY;
+	hdma2.Init.PeriphInc = DMA_PINC_DISABLE;
+	hdma2.Init.MemInc = DMA_MINC_ENABLE;
+	hdma2.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+	hdma2.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+	hdma2.Init.Mode = DMA_CCR_CIRC;
+	hdma2.Init.Priority = DMA_PRIORITY_HIGH;
+
+	if (HAL_DMA_Init(&hdma2) != HAL_OK)
+	{
+	  Error_Handler();
+	}
+
+	HAL_DMA_MuxRequestGeneratorConfigTypeDef requestGeneratorConfig;
+
+	requestGeneratorConfig.SignalID = HAL_DMAMUX1_REQ_GEN_EXTI4;
+	requestGeneratorConfig.Polarity = HAL_DMAMUX_REQ_GEN_RISING_FALLING;
+	requestGeneratorConfig.RequestNumber = 1u;
+
+	HAL_DMAEx_ConfigMuxRequestGenerator(&hdma2, &requestGeneratorConfig);
+}
 
 /* USER CODE END 2 */
 

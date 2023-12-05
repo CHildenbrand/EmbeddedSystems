@@ -14,12 +14,16 @@
 #include "tim.h"
 #include "crc.h"
 #include "adc.h"
+#include "string.h"
 
 #include "main_state.h"
 
 /*******************************************************************************
 * Defines
 *******************************************************************************/
+
+/*! External handle to DMA2 structure with Channel 1 */
+extern DMA_HandleTypeDef hdma2;
 
 /*******************************************************************************
 * Local Types and Typedefs
@@ -144,6 +148,11 @@ int main(void)
 {
     static MainState m_mainState;
 
+    static uint32_t timerCntValue[10u];
+
+    (void)memset(&timerCntValue[0u], 0u, sizeof(timerCntValue));
+
+
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
 
@@ -158,10 +167,11 @@ int main(void)
     MX_GPIO_Init();
     MX_CRC_Init();
     MX_DMA_Init();
+    MX_DMA2_Init();
     MX_TIM_Init();
     MX_ADC_Init();
 
-    MainState_Init(&m_mainState);
+    HAL_DMA_Start(&hdma2, (uint32_t)&TIM2->CNT, (uint32_t)&timerCntValue[0u], sizeof(timerCntValue));
 
     while (1u)
     {

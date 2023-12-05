@@ -30,6 +30,7 @@ extern "C" {
 
 /* DMA memory to memory transfer handles -------------------------------------*/
 extern DMA_HandleTypeDef hdma_memtomem_dma1_channel1;
+extern DMA_HandleTypeDef hdma_memtomem_dma2_channel1;
 
 /* USER CODE BEGIN Includes */
 
@@ -42,6 +43,7 @@ extern DMA_HandleTypeDef hdma_memtomem_dma1_channel1;
 void MX_DMA_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void MX_DMA2_Init(void);
 
 /* USER CODE END Prototypes */
 

@@ -81,6 +81,7 @@ void Error_Handler(void);
 #define RGB_LED_B_GPIO_Port GPIOC
 #define SW_1_EXTI3_Pin GPIO_PIN_3
 #define SW_1_EXTI3_GPIO_Port GPIOB
+#define SW_1_EXTI3_EXTI_IRQn EXTI3_IRQn
 #define LED_D0_Pin GPIO_PIN_5
 #define LED_D0_GPIO_Port GPIOB
 #define LD4_PWM_Pin GPIO_PIN_8
