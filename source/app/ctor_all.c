@@ -27,11 +27,11 @@
 *******************************************************************************/
 
 /*! Number of LEDs configured as DrvGpio objects */
-#define NUMBER_OF_LEDS 					1u
+#define NUMBER_OF_LEDS                  1u
 /*! Index representing the LD2 USER LED on base Nucleo Board */
-#define LD2_USER_LED_IDX 				0u
+#define LD2_USER_LED_IDX                0u
 /*! Number of Blinky main cycle calls to toggle LED state if blinky */
-#define BLINKY_CYCLE_MAIN_CYCLE_COUNT 	500UL
+#define BLINKY_CYCLE_MAIN_CYCLE_COUNT   500UL
 
 /*******************************************************************************
 * Local Types and Typedefs
@@ -55,6 +55,11 @@ extern const uint32_t __END_CRC_FLASH[];
 * Static Variables
 *******************************************************************************/
 
+/*!
+ * \brief Constructs the \ref RunState object
+ *
+ * \param pThis : Pointer to \ref RunState
+ */
 static void CtorAll_RunState(RunState* const pThis)
 {
     static DrvCrc m_drvCrc;
@@ -72,7 +77,7 @@ static void CtorAll_RunState(RunState* const pThis)
 
     static RunStateConfig m_runStateCfg =
     {
-        .pDrvCrc =  &m_drvCrc,
+        .pDrvCrc = &m_drvCrc,
     };
 
     DrvCrc_Construct(&m_drvCrc, &m_drvCrcCfg);
@@ -80,6 +85,11 @@ static void CtorAll_RunState(RunState* const pThis)
     RunState_Construct(pThis, &m_runStateCfg);
 }
 
+/*!
+ * \brief Constructs the \ref WaitState object
+ *
+ * \param pThis : Pointer to \ref WaitState
+ */
 static void CtorAll_WaitState(WaitState* const pThis)
 {
     static DrvTimer m_waitStateTimer;

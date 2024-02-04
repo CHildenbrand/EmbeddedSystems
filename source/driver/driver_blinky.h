@@ -26,13 +26,16 @@
 * Exported Types and Typedefs
 *******************************************************************************/
 
-/*! Enlightings states of the dedicated LED */
+/*! LED light states */
 typedef enum
 {
+    /*! LED shall be on continuously */
     DrvBlinkyState_On,
 
+    /*! LED shall be off continuously */
     DrvBlinkyState_Off,
 
+    /*! LED shall blink cyclically */
     DrvBlinkyState_Blinky
 } DrvBlinkyState;
 

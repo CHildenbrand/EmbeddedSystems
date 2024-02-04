@@ -13,7 +13,6 @@
 #include "dma.h"
 #include "tim.h"
 #include "crc.h"
-#include "adc.h"
 
 #include "main_state.h"
 
@@ -91,6 +90,9 @@ static void MX_TIM_Init(void)
     MX_TIM2_Init();
 }
 
+/*!
+ * \brief Initializes ADC peripherals
+ */
 static void MX_ADC_Init(void)
 {
 

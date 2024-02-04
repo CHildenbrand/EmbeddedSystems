@@ -29,12 +29,16 @@
 /*! Enumeration of Main State Values */
 typedef enum
 {
+    /*! Initialization state of RunState object */
     RunState_Initial,
 
+    /*! Perform the startup self tests */
     RunState_SelfTest,
 
+    /*! Perform cyclic tasks */
     RunState_Running,
 
+    /*! Error reaction */
     RunState_Error,
 } RunState_State;
 

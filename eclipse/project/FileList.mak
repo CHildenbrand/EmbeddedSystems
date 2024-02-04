@@ -32,8 +32,6 @@ C_SOURCES =  ../../source/app/ctor_all.c \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc_ex.c \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c \
-		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.c \
-		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.c \
 		../../CubeMx/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c \
 		../../CubeMx/Core/Src/system_stm32g4xx.c \
 		../../CubeMx/Core/Src/stm32g4xx_it.c \
@@ -41,8 +39,7 @@ C_SOURCES =  ../../source/app/ctor_all.c \
 		../../CubeMx/Core/Src/tim.c \
 		../../CubeMx/Core/Src/gpio.c \
 		../../CubeMx/Core/Src/dma.c \
-		../../CubeMx/Core/Src/crc.c \
-		../../CubeMx/Core/Src/adc.c
+		../../CubeMx/Core/Src/crc.c
 
 ASM_SOURCES = ../../source/lib/startup_stm32g474xx.s
 

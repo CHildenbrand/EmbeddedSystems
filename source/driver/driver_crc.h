@@ -27,14 +27,17 @@
 /*! Enumeration of current Background Crc calculation */
 typedef enum
 {
+    /*! Driver crc object is initialized */
     DrvCrcState_Initial,
 
+    /*! Driver crc object calculates checksum */
     DrvCrcState_Calculating,
 
+    /*! Driver crc object has finisehd the crc caluclation */
     DrvCrcState_Finished,
 } DrvCrcState;
 
-/*! Configuration structure storing all infos requred for background calculation */
+/*! Configuration structure storing all information required for background calculation */
 typedef struct
 {
     /*! Indication if Crc is calculated by hardware accelerator */
@@ -46,7 +49,7 @@ typedef struct
     /*! Pointer to CRC Handler from STM driver */
     CRC_HandleTypeDef* pHcrc;
 
-    /*! Value representing the start address (including) for crc caclulation */
+    /*! Value representing the start address (including) for crc calculation */
     const uint32_t crcRangeStartAddress;
 
     /*! Value representing the end address (excluding) for crc calculation */
@@ -55,24 +58,24 @@ typedef struct
     /*! Destination address for copy operations of DMA */
     const uint32_t dstAddress;
 
-    /*! Location of PostBuild caclulated crc of flash footprint */
+    /*! Location of PostBuild calculated crc of flash footprint */
     const uint32_t* pCrcAddress;
 } DrvCrcCfg;
 
 /*! Runtime Data of \ref DrvCrc object */
 typedef struct
 {
-    /*! Current state of CRC Background calulation */
+    /*! Current state of CRC Background calculation */
     DrvCrcState state;
 
-    /*! Indication if runtime caluclated crc matches postBuild caluclated value */
+    /*! Indication if runtime calculated crc matches postBuild calculated value */
     bool isValid;
 
     /*! Valid crc raw value */
     uint32_t crc_value;
 } DrvCrcData;
 
-/*! Typedefinition of \ref DrvCrc object */
+/*! Type definition of \ref DrvCrc object */
 typedef struct
 {
     /*! Initialization flag */

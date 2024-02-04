@@ -1,5 +1,6 @@
 # https://astyle.sourceforge.net/astyle.html
 --style=allman
+-s # Ident using 4 spaces per ident
 -p # Insert space padding around operators
 -q # Quiet mode
 -n # Suppress .orig file generation
@@ -14,3 +15,7 @@
 -j # Add braces to unbraced one line
 -z1 # Windows line end style (CRLF)
 -W3 # Align & to name
+--squeeze-ws  # Remove superfluous whitespace
+-c # Converts tabs into spaces
+-xL # Break after Logical
+-xC140 # Maximum Code length 140 per line

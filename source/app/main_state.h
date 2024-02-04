@@ -28,12 +28,16 @@
 /*! Enumeration of Main State Values */
 typedef enum
 {
+    /*! Initialization State */
     MainState_Initial,
 
+    /*! Perform cyclic tasks */
     MainState_Run,
 
+    /*! Wait until cyclic timer elapsed */
     MainState_Wait,
 
+    /*! Error reaction */
     MainState_Error,
 } MainState_State;
 

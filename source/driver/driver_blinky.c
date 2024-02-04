@@ -36,6 +36,11 @@
 * Static Variables
 *******************************************************************************/
 
+/*!
+ * \brief Initialize the low level GPIO according to configuration
+ *
+ * \param pDrvGpio : Pointer to \ref DrvGpio object
+ */
 static void DrvBlinky_InitPin(DrvGpio* const pDrvGpio)
 {
     HAL_GPIO_WritePin(pDrvGpio->ledPort, pDrvGpio->ledPin, pDrvGpio->initValue);
@@ -43,7 +48,11 @@ static void DrvBlinky_InitPin(DrvGpio* const pDrvGpio)
     pDrvGpio->currentValue = pDrvGpio->initValue;
 }
 
-
+/*!
+ * \brief Sets the GPIO pin to high level
+ *
+ * \param pDrvGpio : Pointer to \ref DrvGpio object
+ */
 static void DrvBlinky_SetPin(DrvGpio* const pDrvGpio)
 {
     HAL_GPIO_WritePin(pDrvGpio->ledPort, pDrvGpio->ledPin, GPIO_PIN_SET);
@@ -51,6 +60,11 @@ static void DrvBlinky_SetPin(DrvGpio* const pDrvGpio)
     pDrvGpio->currentValue = GPIO_PIN_SET;
 }
 
+/*!
+ * \brief Sets the GPIO pin to low level
+ *
+ * \param pDrvGpio : Pointer to \ref DrvGpio object
+ */
 static void DrvBlinky_ResetPin(DrvGpio* const pDrvGpio)
 {
     HAL_GPIO_WritePin(pDrvGpio->ledPort, pDrvGpio->ledPin, GPIO_PIN_RESET);
@@ -58,6 +72,11 @@ static void DrvBlinky_ResetPin(DrvGpio* const pDrvGpio)
     pDrvGpio->currentValue = GPIO_PIN_RESET;
 }
 
+/*!
+ * \brief Toggles the GPIO pin state
+ *
+ * \param pDrvGpio : Pointer to \ref DrvGpio object
+ */
 static void DrvBlinky_TogglePin(DrvGpio* const pDrvGpio)
 {
     if (pDrvGpio->currentValue != GPIO_PIN_RESET)
@@ -107,12 +126,12 @@ void DrvBlinky_Cyclic(DrvBlinky* const pThis)
         DrvBlinky_SetPin(pThis->pCfg->pDrvGpio);
     }
 
-    else if (pThis->data.state  == DrvBlinkyState_Off)
+    else if (pThis->data.state == DrvBlinkyState_Off)
     {
         DrvBlinky_ResetPin(pThis->pCfg->pDrvGpio);
     }
 
-    else if (pThis->data.state  == DrvBlinkyState_Blinky)
+    else if (pThis->data.state == DrvBlinkyState_Blinky)
     {
         pThis->data.blinkyCycleCnt++;
 

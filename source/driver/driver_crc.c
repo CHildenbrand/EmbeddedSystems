@@ -28,12 +28,17 @@
 * Static Variables
 *******************************************************************************/
 
+/*! Indication flag that runtime calculated crc is now available */
 static bool m_crcAvailable = false;
 
 /*******************************************************************************
 * Static Functions
 *******************************************************************************/
 
+/*!
+ * \brief Dma complete callback handler
+ * @param pHdma : Pointer to DMA_HandleTypeDef object
+ */
 static void DrvCrc_HandleDmaTxComplete(DMA_HandleTypeDef* pHdma)
 {
     m_crcAvailable = true;

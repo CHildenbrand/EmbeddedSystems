@@ -15,7 +15,6 @@
 #include "run_state.h"
 
 #include "tim.h"
-#include "adc.h"
 #include "stm32g4xx_ll_tim.h"
 
 /*******************************************************************************
