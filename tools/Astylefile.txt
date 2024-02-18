@@ -8,7 +8,7 @@
 -K # Ident case 
 -xW # Ident Preprocessor blocks
 -Y # Ident Comments
--F # Pad enmpty lines around header blocks
+-f # Pad empty lines around header blocks
 -U # Remove extra space padding around parens
 -H # Add space padding after if, for, while 
 -k1 # Attach a pointer to the variable type
