@@ -1,4 +1,5 @@
 # project specific make file
+SHELL = cmd
 TARGET = project
 
 -include FileList.mak
